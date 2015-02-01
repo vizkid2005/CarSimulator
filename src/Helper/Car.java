@@ -7,14 +7,21 @@ import java.util.*;
 public class Car {
 	private String makeDate;
 	private String color;
-	private double currSpeed;
-	private double maxSpeed;
-	private double rateOfAccl;
-	private double rateOfBreakking;
+	private double currSpeed; //Imperial units
+	private double maxSpeed; //Imperial units
+	private double rateOfAccl; //Imperial units
+	private double rateOfBraking; //Imperial units
+
+	//Instead of the x y coordinate, we point to the roadsegment it is currently in
 	private double xCoordinate;
 	private double yCoordinate;
-	private String type; 
-	private String direction;
+	/*
+	 * We have to make speeds relative to the grid size,
+	 * It has to be in the order of 0.01 gridPoints per second.
+	 */
+
+	private String type; //Civilian, Cop or Rogue cars
+	private String direction; //North, South, East, West
 	private  int currentLane;
 	private String currentAction;
 	private boolean isControlled;
@@ -27,7 +34,7 @@ public class Car {
 		currSpeed=0.0;
 		maxSpeed=100;
 		rateOfAccl=5.0;
-		rateOfBreakking=5.0;
+		rateOfBraking=5.0;
 		xCoordinate=-1;
 		yCoordinate=-1;
 		type="REGULAR";  
@@ -53,8 +60,8 @@ public class Car {
 		this.rateOfAccl=rateOfAccl;
 	}
 	
-	void setRateOfBreaking(double rateOfBreakking){
-		this.rateOfBreakking=rateOfBreakking;
+	void setRateOfBraking(double rateOfBraking){
+		this.rateOfBraking=rateOfBraking;
 	}
 	void setCarPosition(double xCoordinate,double yCoordinate){
 		this.xCoordinate=xCoordinate;
@@ -84,7 +91,7 @@ public class Car {
 		System.out.println("currSpeed : "+currSpeed) ;
 		System.out.println("maxSpeed : "+maxSpeed) ;
 	    System.out.println("rateOfAccl : "+rateOfAccl) ;
-		System.out.println("rateOfBreakking : "+rateOfBreakking) ;
+		System.out.println("rateOfBreakking : "+rateOfBraking) ;
 		System.out.println("xCoordinate : "+xCoordinate) ;
 		System.out.println("yCoordinate : "+yCoordinate) ;
 		System.out.println("type : "+type) ;  
