@@ -40,7 +40,7 @@ public class GridPoint {
     public boolean setY(int newY) {
         y = newY;
         return true;
-        //REturn false if the above statement fails #Futurework
+        //Return false if the above statement fails #Futurework
     }
 
 }

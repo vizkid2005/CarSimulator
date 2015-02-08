@@ -12,13 +12,27 @@ public class Road {
 	GridPoint beginPoint;
 	GridPoint endPoint;
 	String roadName;
+    String orientation;
 
 	public Road(GridPoint bp, GridPoint ep, String name){
 		beginPoint = bp;
 		endPoint = ep;
 		roadName = name;
+        setOrientation();
 	}
-	public GridPoint getBeginPoint(){
+	public void setOrientation(){
+        if(beginPoint.getX() == endPoint.getX()){
+            orientation = new String("NS"); // North-South
+        }
+        else{
+            orientation = new String("EW"); // East - West
+        }
+    }
+
+    public String getOrientation(){
+        return orientation;
+    }
+    public GridPoint getBeginPoint(){
 		return beginPoint;
 	}
 	public GridPoint getEndPoint(){
