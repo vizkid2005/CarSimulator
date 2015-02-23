@@ -113,7 +113,7 @@ public class Car {
 
     void accelerate(){
 
-        this.currentDist = (this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2); // s = ut + 1/2 at^2
+        this.currentDist = (this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2)); // s = ut + 1/2 at^2
         this.currSpeed = this.currSpeed+this.rateOfAccl; //v = u + at (The world is progressing at the speed of 1 second)
 
     }
