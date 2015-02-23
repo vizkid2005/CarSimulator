@@ -5,26 +5,24 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Car {
-	private String makeDate;
-	private String color;
+	private String makeDate; //Property of a car
+	private String color; //Property of the car
 	private double currSpeed; //Imperial units
 	private double maxSpeed; //Imperial units
 	private double rateOfAccl; //Imperial units
 	private double rateOfBraking; //Imperial units
 
+    //Crucial variable, simulates movement of car.
+    private double currentDist;
 	//Instead of the x y coordinate, we point to the roadsegment it is currently in
-	private double xCoordinate;
-	private double yCoordinate;
-	/*
-	 * We have to make speeds relative to the grid size,
-	 * It has to be in the order of 0.01 gridPoints per second.
-	 */
+	private int xCoordinate;
+	private int yCoordinate;
 
 	private String type; //Civilian, Cop or Rogue cars
 	private String direction; //North, South, East, West
-	private  int currentLane;
-	private String currentAction;
-	private boolean isControlled;
+	private  int currentLane; //Indicates Lane Number
+	private String currentAction; //Not needed
+	private boolean isControlled; //If false, follows the default policy, else has to be controlled by policy specified by user
 
 	Car(){
 		Date date=new Date();
@@ -32,15 +30,15 @@ public class Car {
 		makeDate=dateFormat.format(date);
 		color="RED";
 		currSpeed=0.0;
-		maxSpeed=100;
-		rateOfAccl=5.0;
+		maxSpeed=100; //mph
+		rateOfAccl=1.0;//
 		rateOfBraking=5.0;
 		xCoordinate=-1;
 		yCoordinate=-1;
 		type="REGULAR";  
-		direction="NORTH"; 
+		//direction="NORTH";
 		currentLane=1; 
-		currentAction="STOP";
+		//currentAction="STOP";
 		isControlled=true;
 	}
 	
@@ -63,7 +61,7 @@ public class Car {
 	void setRateOfBraking(double rateOfBraking){
 		this.rateOfBraking=rateOfBraking;
 	}
-	void setCarPosition(double xCoordinate,double yCoordinate){
+	void setCarPosition(int xCoordinate,int yCoordinate){
 		this.xCoordinate=xCoordinate;
 		this.yCoordinate=yCoordinate;
 	}
@@ -106,10 +104,21 @@ public class Car {
 		System.out.println("xCoordinate : "+xCoordinate) ;
 		System.out.println("yCoordinate : "+yCoordinate) ;
 	}
-	
-	void stop(){
-		this.currentAction="STOP";
-	}
+
+    void accelerate(){
+
+        this.currentDist = this.currSpeed + 0.5*this.rateOfAccl; // s = ut + 1/2 at^2
+        this.currSpeed = this.currSpeed+this.rateOfAccl; //v = u + at (The world is progressing at the speed of 1 second)
+
+    }
+
+    void brake(){
+        this.currentDist = this.currSpeed - 0.5*this.rateOfBraking; // s = ut - 1/2 at^2
+        this.currSpeed = this.currSpeed+this.rateOfBraking; //v = u - at
+    }
+
+    /*
+    Not needed as per new design
 	void moveRight(){
 		if(this.direction=="NORTH"){
 			this.xCoordinate=this.xCoordinate+1;
@@ -160,5 +169,11 @@ public class Car {
 		}
 		this.currentAction="MOVESTRAIGHT";
 	}
+
+	void stop(){
+		this.currentAction="STOP";
+	}
+
+    */
 }
 

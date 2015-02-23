@@ -7,7 +7,7 @@ public class Test {
 		
 		newCar.getCarStatus();
 		
-		newCar.setCarPosition(2.0,0.5);
+		//newCar.setCarPosition(2.0,0.5);
 		newCar.setCarColor("BLACK");
 		newCar.setType("POLICE");
 		newCar.setDirection("NORTH");
@@ -16,13 +16,13 @@ public class Test {
 		
 		newCar.getCarStatus();
 		
-		newCar.moveLeft();
+		//newCar.moveLeft();
 		newCar.getCarCoordinate();
-		newCar.moveRight();
+		//newCar.moveRight();
 		newCar.getCarCoordinate();
-		newCar.moveStraight();
+		//newCar.moveStraight();
 		newCar.getCarCoordinate();
-		newCar.stop();
+		//newCar.stop();
 		newCar.getCarCoordinate();
 		
 		newCar.getCarStatus();

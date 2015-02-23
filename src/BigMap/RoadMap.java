@@ -115,26 +115,51 @@ public class RoadMap {
     public void getIntersectionPoints(ArrayList<Road> roads){
 
         //Before this make sure, all road start points are valid
-        //All beginpoints should be less than the end points
+        //All begin points should be less than the end points
         //Write a method for that
         intersectionPoints = new ArrayList<GridPoint>();
         for(int i = 0;i<roads.size();i++){
             for(int j = i;j<roads.size();j++){
-                if(roads.get(i) == roads.get(j)){
+
+                Road r1 = roads.get(i);
+                Road r2 = roads.get(j);
+
+                //A Road cannot intersect itself
+                if (r1 == r2){
                     continue;
                 }
-                if(roads.get(i).getOrientation().equals(roads.get(j).getOrientation())){
+                //Parallel roads do not intersect
+                if (r1.getOrientation().equals(r2.getOrientation())){
                     continue;
                 }
+
                 int intersectionX,intersectionY;
-                if(roads.get(i).getOrientation().equals("NS")){
-                    intersectionX = roads.get(i).getBeginPoint().getX();
-                    intersectionY = roads.get(j).getBeginPoint().getY();
+
+                if (r1.getOrientation().equals("NS")){
+                   if (r1.getBeginPoint().getY() >= r2.getBeginPoint().getY()
+                           && r1.getBeginPoint().getY() <= r2.getEndPoint().getY()
+                               && r1.getBeginPoint().getX() <= r2.getBeginPoint().getX()
+                                   && r1.getEndPoint().getX() >= r2.getBeginPoint().getX()){
+                       intersectionX = r2.getBeginPoint().getX();
+                       intersectionY = r1.getBeginPoint().getY();
+                   }
+                    else{
+                       continue;
+                   }
                 }
-                else{
-                    intersectionX = roads.get(j).getBeginPoint().getX();
-                    intersectionY = roads.get(i).getBeginPoint().getY();
+                else {
+                    if(r2.getBeginPoint().getX() <= r1.getBeginPoint().getX()
+                            && r2.getEndPoint().getX() >= r1.getBeginPoint().getX()
+                                && r2.getBeginPoint().getY() >= r1.getBeginPoint().getY()
+                                    && r2.getBeginPoint().getY() <= r1.getEndPoint().getY()){
+                        intersectionX = r1.getBeginPoint().getX();
+                        intersectionY = r2.getBeginPoint().getY();
+                    }
+                    else{
+                        continue;
+                    }
                 }
+
                 intersectionPoints.add(new GridPoint(intersectionX, intersectionY));
             }
         }

@@ -5,7 +5,6 @@ package Helper;
   * The user will create as many objects of the Road class as desired.
   * An Arraylist of all the Road objects will be passed to the VirtualMap constructor
   * which will initalize the LinkedList of road segments.
-  *
   */
 public class Road {
 
@@ -21,14 +20,13 @@ public class Road {
         setOrientation();
 	}
 	public void setOrientation(){
-        if(beginPoint.getX() == endPoint.getX()){
+        if(beginPoint.getY() == endPoint.getY()){
             orientation = new String("NS"); // North-South
         }
         else{
             orientation = new String("EW"); // East - West
         }
     }
-
     public String getOrientation(){
         return orientation;
     }
