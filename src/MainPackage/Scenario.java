@@ -4,6 +4,7 @@ import BigMap.RoadMap;
 import Helper.Car;
 import Helper.Policy;
 import Helper.Road;
+import Helper.RoadSegment;
 import Initializers.ReadRoadInput;
 
 import java.util.ArrayList;
@@ -36,6 +37,9 @@ public class Scenario {
 		ArrayList<Road> roadList=r1.readRoadInput(fileName);
 		
 		RoadMap newMap=new RoadMap(roadList);
+		RoadSegment currentSegment=newMap.getRoadSegmentFromRoadName("MG Road",1);
+		
+		System.out.println("Current Segment :"+currentSegment.getPointInGrid().getX()+currentSegment.getPointInGrid().getY());
 		
 		Car newCar=new Car();
 		newCar.getCarStatus();
