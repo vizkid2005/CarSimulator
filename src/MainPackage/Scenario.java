@@ -24,6 +24,6 @@ public class Scenario {
     }
 
     //How will time be managed ?
-    
+
 
 }

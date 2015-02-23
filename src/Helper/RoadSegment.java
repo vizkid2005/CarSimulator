@@ -14,8 +14,9 @@ public class RoadSegment {
     RoadSegment westSegment;
     GridPoint pointInGrid;
     boolean isIntersection; //A car can change direction only if it is at an intersection
-    int width;
-    int height;
+    int width; //Will be removed
+    int height; // Will be removed
+    int length; // Arbitrary length - Do not forget to intialize before running
 
     //Boilerplate constructor, the real work will be done by the get and set methods
     public RoadSegment(GridPoint gp, boolean isIntersection){

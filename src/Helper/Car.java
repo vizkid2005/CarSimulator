@@ -17,6 +17,8 @@ public class Car {
 	//Instead of the x y coordinate, we point to the roadsegment it is currently in
 	private int xCoordinate;
 	private int yCoordinate;
+    private RoadSegment currentSegment;
+    private RoadSegment nextSegment;
 
 	private String type; //Civilian, Cop or Rogue cars
 	private String direction; //North, South, East, West

@@ -13,12 +13,12 @@ public class TestIntersectionPoints {
 
     public static void main(String[] args) {
 
-        Road road1 = new Road(new GridPoint(0,0),new GridPoint(6,0),"Road1");
-        Road road5 = new Road(new GridPoint(0,0),new GridPoint(0,4),"Road5");
-        Road road2 = new Road(new GridPoint(5,0),new GridPoint(5,8),"Road2");
-        Road road3 = new Road(new GridPoint(3,4),new GridPoint(3,9),"Road3");
-        Road road4 = new Road(new GridPoint(0,4),new GridPoint(3,4),"Road4");
-        Road road6 = new Road(new GridPoint(0,7),new GridPoint(5,7),"Road6");
+        Road road1 = new Road(new GridPoint(1,2),new GridPoint(1,5),"Road1");
+        Road road5 = new Road(new GridPoint(1,3),new GridPoint(3,3),"Road5");
+        Road road2 = new Road(new GridPoint(3,2),new GridPoint(3,6),"Road2");
+        Road road3 = new Road(new GridPoint(3,2),new GridPoint(4,2),"Road3");
+        Road road4 = new Road(new GridPoint(3,6),new GridPoint(4,6),"Road4");
+        //Road road6 = new Road(new GridPoint(0,7),new GridPoint(5,7),"Road6");
 
         ArrayList<Road> listOfRoads = new ArrayList<Road>();
         listOfRoads.add(road1);
@@ -26,7 +26,7 @@ public class TestIntersectionPoints {
         listOfRoads.add(road3);
         listOfRoads.add(road4);
         listOfRoads.add(road5);
-        listOfRoads.add(road6);
+        //listOfRoads.add(road6);
 
         RoadMap map = new RoadMap(listOfRoads);
     }

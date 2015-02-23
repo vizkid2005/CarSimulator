@@ -23,9 +23,15 @@ public class RoadMap {
         printIntersectionPoints(roads);
         buildRoadMap(roads);
         printRoads();
+        testIntersections();
+    }
+
+    public RoadSegment getNextSegemnt(RoadSegment currSegment,String action, ){
+
     }
 
     public void printRoads(){
+        System.out.println("pointers length : "+ IntersectionPointers.size());
         for(int i=0;i<RoadStartPointers.size();i++){
             System.out.println();
             RoadSegment start = RoadStartPointers.get(i);
@@ -47,13 +53,13 @@ public class RoadMap {
             System.out.println(IntersectionPointers.get(i).getPointInGrid().getX()+","+IntersectionPointers.get(i).getPointInGrid().getY());
         }
     }
-    public void buildRoadMap(ArrayList<Road> roads){
+    public void buildRoadMap (ArrayList<Road> roads){
 
         RoadStartPointers = new ArrayList<RoadSegment>();
         RoadEndPointers = new ArrayList<RoadSegment>();
         IntersectionPointers = new ArrayList<RoadSegment>();
 
-        for(int i =0;i<roads.size();i++){
+        for (int i =0;i<roads.size();i++){
             int beginX = roads.get(i).getBeginPoint().getX();
             int beginY = roads.get(i).getBeginPoint().getY();
             int endX = roads.get(i).getEndPoint().getX();
@@ -61,48 +67,73 @@ public class RoadMap {
             String roadOrientation = roads.get(i).getOrientation();
 
             RoadSegment beginRoad;
-
-            //May break if the point where the road begins has an intersection
-            if(intersectionPoints.contains(new GridPoint(beginX,beginY))) {
-                beginRoad = new RoadSegment(new GridPoint(beginX, beginY), true);
+            if(this.isIntersectionPoint(intersectionPoints, new GridPoint(beginX, beginY))){
+                beginRoad = new RoadSegment(new GridPoint(beginX,beginY), true);
+                IntersectionPointers.add(beginRoad);
             }
-            else{
+            else {
                 beginRoad = new RoadSegment(new GridPoint(beginX, beginY), false);
             }
 
+            //May break if the point where the road begins has an intersection
             RoadSegment current = beginRoad;
-
             //Handle intersection Points
             if(roadOrientation.equals("EW")) {
-                while (beginX < endX) {
+                while (beginY < endY) {
                     RoadSegment nextSegment;
-                    if (intersectionPoints.contains(new GridPoint(beginX + 1, beginY))) {
-                        nextSegment = new RoadSegment(new GridPoint((beginX + 1), beginY), true);
-                        IntersectionPointers.add(nextSegment);
+                    if (this.isIntersectionPoint(intersectionPoints,new GridPoint(beginX, beginY+1))) {
+                        if(isIntersectionAlreadyVisited(new GridPoint((beginX), beginY+1)) != null){
+                            RoadSegment revisit = isIntersectionAlreadyVisited(new GridPoint((beginX), beginY+1));
+                            current.setEastSegment(revisit);
+                            revisit.setWestSegment(current);
+                            beginY++;
+                            current = revisit;
+                            continue;
+                        }
+                        else{
+                            nextSegment = new RoadSegment(new GridPoint((beginX), beginY+1), true);
+                            IntersectionPointers.add(nextSegment);
+                        }
+
                     } else {
-                        nextSegment = new RoadSegment(new GridPoint((beginX + 1), beginY), false);
+                        nextSegment = new RoadSegment(new GridPoint((beginX), beginY+1), false);
                     }
 
                     current.setEastSegment(nextSegment);
                     nextSegment.setWestSegment(current);
-                    beginX++;
+                    beginY++;
                     current = nextSegment;
                 }
                 RoadStartPointers.add(beginRoad);
                 RoadEndPointers.add(current);
             }
             else{
-                while(beginY<endY){
+                while(beginX<endX){
                     RoadSegment nextSegment;
-                    if(intersectionPoints.contains(new GridPoint(beginX, beginY+1))) {
-                        nextSegment = new RoadSegment(new GridPoint(beginX, beginY+1), true);
-                        IntersectionPointers.add(nextSegment);
+                    if(this.isIntersectionPoint(intersectionPoints,new GridPoint(beginX+1, beginY))) {
+                        //nextSegment = new RoadSegment(new GridPoint(beginX+1, beginY), true);
+                        //IntersectionPointers.add(nextSegment);
+
+                        if(isIntersectionAlreadyVisited(new GridPoint((beginX+1), beginY)) != null){
+                            RoadSegment revisit = isIntersectionAlreadyVisited(new GridPoint((beginX+1), beginY));
+                            current.setSouthSegment(revisit);
+                            revisit.setNorthSegment(current);
+                            beginX++;
+                            current = revisit;
+                            continue;
+                        }
+                        else{
+                            nextSegment = new RoadSegment(new GridPoint((beginX+1), beginY), true);
+                            IntersectionPointers.add(nextSegment);
+                        }
+
+
                     } else {
-                        nextSegment = new RoadSegment(new GridPoint(beginX, beginY+1), false);
+                        nextSegment = new RoadSegment(new GridPoint(beginX+1, beginY), false);
                     }
                     current.setSouthSegment(nextSegment);
                     nextSegment.setNorthSegment(current);
-                    beginY++;
+                    beginX++;
                     current = nextSegment;
                 }
                 RoadStartPointers.add(beginRoad);
@@ -110,7 +141,6 @@ public class RoadMap {
             }
         }
     }
-
     //Done
     public void getIntersectionPoints(ArrayList<Road> roads){
 
@@ -164,13 +194,12 @@ public class RoadMap {
             }
         }
     }
-
     //Refine
     public void printIntersectionPoints(ArrayList<Road> roads){
         System.out.println("Roads : ");
         for(int i =0;i<roads.size();i++){
             System.out.println("BX : "+roads.get(i).getBeginPoint().getX()+ "  BY : "+roads.get(i).getBeginPoint().getY()
-                              +"EX : "+roads.get(i).getEndPoint().getX()+ "  BY : "+roads.get(i).getEndPoint().getY()+" " +
+                              +"  EX : "+roads.get(i).getEndPoint().getX()+ "  BY : "+roads.get(i).getEndPoint().getY()+" " +
                     "Orientation : "+roads.get(i).getOrientation());
         }
         System.out.println("Intersection Points of the given roads.");
@@ -182,7 +211,6 @@ public class RoadMap {
             System.out.println("X : "+intersectionPoints.get(i).getX()+ " Y : "+intersectionPoints.get(i).getY());
         }
     }
-
     //Done
     public void checkDuplicates(ArrayList<Road> roads){
         for(int i = 0;i< roads.size();i++) {
@@ -195,6 +223,45 @@ public class RoadMap {
                     System.exit(0);
                 }
             }
+        }
+    }
+
+    public boolean isIntersectionPoint(ArrayList<GridPoint> intersectionPoints, GridPoint toCompare){
+        int j;
+        for(j = 0;j<intersectionPoints.size();j++){
+            GridPoint temp = intersectionPoints.get(j);
+            if(temp.getX() == toCompare.getX() && temp.getY() == toCompare.getY()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public RoadSegment isIntersectionAlreadyVisited(GridPoint visited){
+        int j;
+        for(j=0;j<IntersectionPointers.size();j++){
+            RoadSegment temp = IntersectionPointers.get(j);
+            GridPoint gp = temp.getPointInGrid();
+            if(gp.getX() == visited.getX() && gp.getY() == visited.getY()){
+                return temp;
+            }
+        }
+        return null;
+    }
+
+    public void testIntersections(){
+        for(int j = 0;j<IntersectionPointers.size();j++){
+
+            try {
+                RoadSegment temp = IntersectionPointers.get(j);
+                System.out.println("For section " + temp.getPointInGrid().getX() + " - " + temp.getPointInGrid().getY() + " : ");
+                System.out.println("North Segment = " + temp.getNorthSegment().getPointInGrid().getX() + " - " + temp.getNorthSegment().getPointInGrid().getY());
+                System.out.println("South Segment = " + temp.getSouthSegment().getPointInGrid().getX() + " - " + temp.getSouthSegment().getPointInGrid().getY());
+                System.out.println("East Segment = " + temp.getEastSegment().getPointInGrid().getX() + " - " + temp.getEastSegment().getPointInGrid().getY());
+                System.out.println("West Segment = " + temp.getWestSegment().getPointInGrid().getX() + " - " + temp.getWestSegment().getPointInGrid().getY());
+                System.out.println();
+            }
+            catch(Exception e){}
         }
     }
 }
