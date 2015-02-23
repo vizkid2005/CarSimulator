@@ -341,7 +341,7 @@ public class RoadMap {
     public RoadSegment getRoadSegmentFromRoadName(String roadName, int laneNumber){
         GridPoint beginPoint = null;
         GridPoint endPoint = null;
-
+        System.out.println("listOfRoads.size() :");
         for(int i=0;i<listOfRoads.size();i++){
             if(listOfRoads.get(i).getRoadName().equals(roadName)){
                 beginPoint = listOfRoads.get(i).getBeginPoint();
