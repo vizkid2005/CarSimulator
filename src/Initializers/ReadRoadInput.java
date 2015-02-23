@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import Helper.GridPoint;
 import Helper.Road;
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> 6e77d2aa1ccdc1a46f793c4976265c156fc4ba89
 
 public class ReadRoadInput {
 	int x1,y1,x2,y2;

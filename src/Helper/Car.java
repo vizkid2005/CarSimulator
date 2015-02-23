@@ -5,10 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.math.*;
 
+import BigMap.RoadMap;
+
 import com.sun.corba.se.impl.orbutil.closure.Constant;
 
 public class Car {
-	private float TIME=10; // Time set to 1 Sec
+	private double TIME=10; // Time set to 10 Sec
 	private String makeDate; //Property of a car
 	private String color; //Property of the car
 	private double currSpeed; //Imperial units
@@ -18,9 +20,10 @@ public class Car {
 
     //Crucial variable, simulates movement of car.
     private double currentDist;
+    private double prevDist=0.0;
 	//Instead of the x y coordinate, we point to the roadsegment it is currently in
-	private int xCoordinate;
-	private int yCoordinate;
+	private double xCoordinate;
+	private double yCoordinate;
     private RoadSegment currentSegment;
     private RoadSegment nextSegment;
 
@@ -30,7 +33,9 @@ public class Car {
 	private String currentAction; //Not needed
 	private boolean isControlled; //If false, follows the default policy, else has to be controlled by policy specified by user
 
-	Car(){
+	//RoadMap newMap=new RoadMap();          This should be in the Scenario
+	
+	public Car(){
 		Date date=new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		makeDate=dateFormat.format(date);
@@ -39,56 +44,73 @@ public class Car {
 		maxSpeed=100; //mph
 		rateOfAccl=1.0;//
 		rateOfBraking=5.0;
-		xCoordinate=-1;
-		yCoordinate=-1;
+		currentDist=0.0;
+		xCoordinate=-1.0;
+		yCoordinate=-1.0;
 		type="REGULAR";  
-		//direction="NORTH";
+		direction="EW";
 		currentLane=1; 
 		//currentAction="STOP";
 		isControlled=true;
 	}
 	
-	void setCarColor(String color){
+	public void xCoordinate(double x){
+		this.xCoordinate=x;
+	}
+	
+	public void yCoordinate(double y){
+		this.yCoordinate=y;
+	}
+	
+	public void setCarColor(String color){
 		this.color=color;
 	}
 
-	void setCurrSpeed(double currSpeed){
+	public void setCurrSpeed(double currSpeed){
 		this.currSpeed=currSpeed;
 	}
 	
-	void setMaxSpeed(double maxSpeed){
+	public void setMaxSpeed(double maxSpeed){
 		this.maxSpeed=maxSpeed;
 	}
 	
-	void setRateOfAccl(double rateOfAccl){
+	public void setRateOfAccl(double rateOfAccl){
 		this.rateOfAccl=rateOfAccl;
 	}
 	
-	void setRateOfBraking(double rateOfBraking){
+	public void setRateOfBraking(double rateOfBraking){
 		this.rateOfBraking=rateOfBraking;
 	}
-	void setCarPosition(int xCoordinate,int yCoordinate){
+	
+	public void setCarPosition(int xCoordinate,int yCoordinate){
 		this.xCoordinate=xCoordinate;
 		this.yCoordinate=yCoordinate;
 	}
 	
-	void setType(String type){
+	public void setType(String type){
 		this.type=type;
 	}
 	
-	void setDirection(String direction){
+
+	public void setDirection(String direction){
 		this.direction=direction;
 	}
 	
-	void setCurrentLane(int currentLane){
+	
+	
+	public void setCurrentLane(int currentLane){
 		currentLane=this.currentLane;
 	}
 	
-	void setIsControlled(boolean isControlled){
+	public int getCurrentLane(){
+		return this.currentLane;
+	}
+	
+	public void setIsControlled(boolean isControlled){
 		this.isControlled=isControlled;
 	}
 	
-	void getCarStatus(){
+	public void getCarStatus(){
 		System.out.println("***************** Car Status *******************");
 		System.out.println("MakeDate : "+makeDate);
 		System.out.println("color : "+color) ;
@@ -105,23 +127,67 @@ public class Car {
 		isControlled=true;
 	}
 	
-	void getCarCoordinate(){
+	public void getCarCoordinate(){
 		System.out.println("***************** Car Co-ordinate Status *******************");
 		System.out.println("xCoordinate : "+xCoordinate) ;
 		System.out.println("yCoordinate : "+yCoordinate) ;
 	}
 
-    void accelerate(){
-
-        this.currentDist = (this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2)); // s = ut + 1/2 at^2
-        this.currSpeed = this.currSpeed+this.rateOfAccl; //v = u + at (The world is progressing at the speed of 1 second)
-
+	public void accelerate(){
+        this.currentDist = this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+        this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	        if(this.prevDist>=100){
+	        	this.prevDist=0.0;
+	        }	
+	    calculateNewCoordinates();
+        // NewDistance = old_Distance + (ut + 1/2 at^2)   Motion Formula considered : s = ut + 1/2 at^2
+        this.currSpeed = this.currSpeed+(this.rateOfAccl*TIME); 
+        //v = u + at (The world is progressing at the speed of 1 second)
     }
 
-    void brake(){
-        this.currentDist = this.currSpeed - 0.5*this.rateOfBraking; // s = ut - 1/2 at^2
-        this.currSpeed = this.currSpeed+this.rateOfBraking; //v = u - at
+	public void brake(){
+        this.currentDist = this.prevDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0))); // s = ut - 1/2 at^2
+        this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	        if(this.prevDist>=100){
+	        	this.prevDist=0.0;
+	        }
+	    calculateNewCoordinates();
+        this.currSpeed = this.currSpeed-(this.rateOfAccl*TIME); //v = u - at
     }
+    
+    
+	public void calculateNewCoordinates(){
+    	if(this.direction=="EW"){
+	    	yCoordinate=this.getCurrentSegment().getPointInGrid().getY() - this.prevDist;
+	    }
+	    
+	    if(this.direction=="WE"){
+	    	yCoordinate=this.getCurrentSegment().getPointInGrid().getY() + this.prevDist;
+	    }
+	    
+	    if(this.direction=="NS"){
+	    	xCoordinate=this.getCurrentSegment().getPointInGrid().getX() + this.prevDist;
+	    }
+	    
+	    if(this.direction=="SN"){
+	    	xCoordinate=this.getCurrentSegment().getPointInGrid().getX() - this.prevDist;
+	    }
+    }
+    
+	public void setCurrentSegment(RoadSegment currentSegment){
+    	currentSegment=this.currentSegment;
+    }
+    
+    
+    
+	public RoadSegment getCurrentSegment(){
+    	return this.currentSegment;
+    }
+    
+//    void moveRight(){
+//    	if(this.currentLane==1 
+//    	
+//    }
 
     /*
     Not needed as per new design

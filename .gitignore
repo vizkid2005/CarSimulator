@@ -1,4 +1,8 @@
 *.class
 .idea/*
 *.iml
+<<<<<<< HEAD
 bin/*
+=======
+bin/*
+>>>>>>> 6e77d2aa1ccdc1a46f793c4976265c156fc4ba89
