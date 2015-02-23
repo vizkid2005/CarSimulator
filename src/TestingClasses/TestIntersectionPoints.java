@@ -3,6 +3,7 @@ package TestingClasses;
 import BigMap.RoadMap;
 import Helper.GridPoint;
 import Helper.Road;
+import Helper.RoadSegment;
 import Initializers.ReadRoadInput;
 
 import java.util.ArrayList;
@@ -33,5 +34,6 @@ public class TestIntersectionPoints {
         //listOfRoads.add(road6);
         */
         RoadMap map = new RoadMap(listOfRoads);
+        RoadSegment temp = map.getRoadSegmentFromRoadName("MG Road",1);
     }
 }

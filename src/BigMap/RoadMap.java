@@ -21,6 +21,7 @@ public class RoadMap {
 
     //The constructor is responsible for building everything.
     public RoadMap(ArrayList<Road> roads){
+        listOfRoads = roads;
         checkDuplicates(roads); //Check for duplicates first, System exits if any duplicates are found.
         getIntersectionPoints(roads); //Calculate intersection points of all roads.
         printIntersectionPoints(roads); //Debug method to check if all roads have appropriate intersection points
