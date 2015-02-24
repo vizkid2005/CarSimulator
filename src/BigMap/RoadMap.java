@@ -22,13 +22,14 @@ public class RoadMap {
     //The constructor is responsible for building everything.
     public RoadMap(ArrayList<Road> roads){
         listOfRoads = roads;
+        ArrayList<RoadSegment> allvisited = new ArrayList<RoadSegment>(); //Just for debugging, remove when not needed
         checkDuplicates(roads); //Check for duplicates first, System exits if any duplicates are found.
         getIntersectionPoints(roads); //Calculate intersection points of all roads.
         printIntersectionPoints(roads); //Debug method to check if all roads have appropriate intersection points
         buildRoadMap(roads); //The core method where all the magic happens
-        printRoads(); // Print roads as a linked list
+        //printRoads(); // Print roads as a linked list
         System.out.println();
-        recursivePrint(RoadStartPointers.get(0),2); //Inorder printing of the roads
+        recursivePrint(RoadStartPointers.get(0),2,allvisited); //Inorder printing of the roads
        // testIntersections();
     }
 
@@ -314,28 +315,30 @@ public class RoadMap {
         }
     }*/
 
-    public void recursivePrint(RoadSegment startPoint, int direction) {
-        if (startPoint == null) {
+    public void recursivePrint(RoadSegment startPoint, int direction, ArrayList<RoadSegment> allvisited) {
+
+        if (startPoint == null || allvisited.contains(startPoint)) {
             return;
         }
+        allvisited.add(startPoint);
         System.out.println("X -> " + startPoint.getPointInGrid().getX() + "  Y -> " + startPoint.getPointInGrid().getY());
         if (direction == 1) {
-            recursivePrint(startPoint.getNorthSegment(), 1);
-            recursivePrint(startPoint.getEastSegment(), 2);
-            recursivePrint(startPoint.getWestSegment(), 4);
+            recursivePrint(startPoint.getNorthSegment(), 1, allvisited);
+            recursivePrint(startPoint.getEastSegment(), 2, allvisited);
+            recursivePrint(startPoint.getWestSegment(), 4, allvisited);
         } else if (direction == 2) {
-            recursivePrint(startPoint.getNorthSegment(), 1);
-            recursivePrint(startPoint.getEastSegment(), 2);
-            recursivePrint(startPoint.getSouthSegment(), 3);
+            recursivePrint(startPoint.getNorthSegment(), 1, allvisited);
+            recursivePrint(startPoint.getEastSegment(), 2, allvisited);
+            recursivePrint(startPoint.getSouthSegment(), 3, allvisited);
 
         } else if (direction == 3) {
-            recursivePrint(startPoint.getEastSegment(), 2);
-            recursivePrint(startPoint.getSouthSegment(), 3);
-            recursivePrint(startPoint.getWestSegment(), 4);
+            recursivePrint(startPoint.getEastSegment(), 2, allvisited);
+            recursivePrint(startPoint.getSouthSegment(), 3, allvisited);
+            recursivePrint(startPoint.getWestSegment(), 4, allvisited);
         } else {
-            recursivePrint(startPoint.getNorthSegment(), 1);
-            recursivePrint(startPoint.getSouthSegment(), 3);
-            recursivePrint(startPoint.getWestSegment(), 4);
+            recursivePrint(startPoint.getNorthSegment(), 1, allvisited);
+            recursivePrint(startPoint.getSouthSegment(), 3, allvisited);
+            recursivePrint(startPoint.getWestSegment(), 4, allvisited);
         }
     }
 
