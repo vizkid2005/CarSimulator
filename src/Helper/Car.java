@@ -8,7 +8,6 @@ import java.math.*;
 
 import BigMap.RoadMap;
 
-import com.sun.corba.se.impl.orbutil.closure.Constant;
 
 public class Car {
 	//DecimalFormat df = new DecimalFormat("###.##");
@@ -88,7 +87,7 @@ public class Car {
 		this.rateOfBraking=rateOfBraking;
 	}
 	
-	public void setCarPosition(int xCoordinate,int yCoordinate){
+	public void setCarPosition(double xCoordinate,double yCoordinate){
 		this.xCoordinate=xCoordinate;
 		this.yCoordinate=yCoordinate;
 	}
@@ -113,6 +112,22 @@ public class Car {
     	this.currentSegment=currentSegment;
     }
 	
+	public boolean setCarInitialPosition(RoadSegment Segment,int laneNumber,String carDirection){
+		double segmentXCoordinate=Segment.getPointInGrid().getX();
+		double segmentYCoordinate=Segment.getPointInGrid().getY();
+		if(carDirection=="north"||carDirection=="south"){
+			this.yCoordinate=segmentYCoordinate+((laneNumber-1)*0.1667);  // 1/6 =0.1667
+			this.xCoordinate=segmentXCoordinate;
+			return true;
+		}
+		else if(carDirection=="east"||carDirection=="west"){
+			this.xCoordinate=segmentXCoordinate+((6-laneNumber)*0.1667);  // 1/6 =0.1667
+			this.yCoordinate=Segment.getPointInGrid().getY();
+			return true;
+		}
+	return false;
+	}
+	
 	/************************** Getter ************************/
 	
 	public int getCurrentLane(){
@@ -134,6 +149,11 @@ public class Car {
 	public RoadSegment getCurrentSegment(){
     	return this.currentSegment;
     }
+	
+	/*
+	 * getCarDirection() - Depending on the Road orientation and lane of a car , this function will
+	 * 					   calculate the car direction.
+	 * */
 	
 	public String getCarDirection(String orientation,int lane){
 		 if(orientation.equals("EW")){
@@ -170,7 +190,7 @@ public class Car {
 			// S=ut+0.5at^2 Equation of Motion
         this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
 	        
-        if(this.prevDist>=0.5){
+        if(this.prevDist>=0.5){                      // End of Segment
 	        	this.prevDist=0.0;
 	        	this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
@@ -178,13 +198,16 @@ public class Car {
 	        	}
 	        	else{
 	        		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
 	        	}
-	        }	
-	    if(this.currentSegment!=null){
-	        calculateNewCoordinates();
-	    }
-        
-	    this.currSpeed = this.currSpeed+(this.rateOfAccl*TIME); 
+	        }
+        else{
+        	if(this.currentSegment!=null){
+		        calculateNewCoordinates();
+		    }
+        }
+		
+        this.currSpeed = this.currSpeed+(this.rateOfAccl*TIME); 
            //v = u + at (The world is progressing at the speed of 1 second)
         return reward;
     }
@@ -197,23 +220,56 @@ public class Car {
 	
 	public boolean brake(){
 		System.out.println("*** Break ***");
-        this.currentDist = this.currentDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0))); // s = ut - 1/2 at^2
-        this.prevDist=this.prevDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-	        if(this.prevDist>=10){
+		if(this.currSpeed==0){
+			reward=false;
+		}
+		else{
+	        this.currentDist = this.currentDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0))); // s = ut - 1/2 at^2
+	        this.prevDist=this.prevDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	        if(this.prevDist>=0.5){                      // End of Segment
 	        	this.prevDist=0.0;
 	        	this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
 	        		reward=false;
 	        	}
+	        	else{
+	        		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+	        	}
 	        }
-	    
-	    if(this.currentSegment!=null){
-		   calculateNewCoordinates();
+	        else{
+		    	if(this.currentSegment!=null){
+			        calculateNewCoordinates();
+			    }
+	        }
+	        this.currSpeed = this.currSpeed-(this.rateOfAccl*TIME);
+	        if(!isSpeedGreaterthanZero()){
+	        	this.currSpeed=0;
+	        }
 		}
-        this.currSpeed = this.currSpeed-(this.rateOfAccl*TIME);
            //v = u - at
         return reward;
     }
+	
+//	public boolean moveRightLane(){
+//		System.out.println("***** Move Right Lane ******");
+//		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+//		// S=ut+0.5at^2 Equation of Motion
+//		this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+//		if(this.prevDist>=0.5){
+//        	this.prevDist=0.0;
+//        	this.currentSegment=getNextSegment();
+//        	if(this.currentSegment==null){
+//        		reward=false;
+//        	}
+//        	else{
+//        		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+//        	}
+//        }	
+//    if(this.currentSegment!=null){
+//        calculateNewCoordinates();
+//    }
+//	}
 	
 	/*
 	 * getNextSegment() : As each road is just the connection of different segments,this will give 
@@ -346,7 +402,7 @@ public class Car {
 		
 		if(this.direction=="west"){
 	    	yCoordinate=currentSegStartY - this.prevDist;
-	    	yCoordinate=Double.parseDouble(df.format(yCoordinate));
+	    	//yCoordinate=Double.parseDouble(df.format(yCoordinate));
 	    }
 	    
 	    if(this.direction=="east"){
@@ -365,6 +421,15 @@ public class Car {
 	    	 
 	    }
     }
+	
+/*************** Validation Procedure *************************/
+	
+	boolean isSpeedGreaterthanZero(){
+		if(this.currSpeed<0){
+			return false;
+		}
+		return true;
+	}
     
 	public void getCarStatus(){
 		System.out.println("***************** Car Status *******************");

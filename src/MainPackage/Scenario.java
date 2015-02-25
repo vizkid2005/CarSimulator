@@ -14,8 +14,11 @@ import java.util.ArrayList;
  *
  */
 public class Scenario {
-
-    public Scenario(RoadMap map, ArrayList<Car> allCars, Policy defaultPolicy){
+	
+	ReadRoadInput r1=new ReadRoadInput();                   // Reading coordinated from inputFile
+	RoadMap newMap;						                   // Creating RoadMap from Roads generated.
+	Car newCar;                                   // Creating a Car
+	public Scenario(RoadMap map, ArrayList<Car> allCars, Policy defaultPolicy){
 
     }
 
@@ -30,57 +33,70 @@ public class Scenario {
         Status s = new Status();
     }
 
-    public void startScenario(){
-    	String fileName="E:\\Spring 2015\\Indepenedent Study\\CarSimulator\\CarSimulator\\src\\InitialFiles\\Roads.csv";
-		
-    	ReadRoadInput r1=new ReadRoadInput();                   // Reading coordinated from inputFile
-		ArrayList<Road> roadList=r1.readRoadInput(fileName);    // and generating Road from it.
-		
-		RoadMap newMap=new RoadMap(roadList);                   // Creating RoadMap from Roads generated.
-		
-		Car newCar=new Car();                                   // Creating a Car
-		
-		newCar.setCurrentLane(2);
-		newCar.getCarStatus();
-		
-		RoadSegment currentSegment=newMap.getRoadSegmentFromRoadName("MG Road",2); // Finding Current segment for a Car
-		System.out.println("Current Segment -  X : "+currentSegment.getPointInGrid().getX()+"\t Y : "+currentSegment.getPointInGrid().getY());
-		newCar.setCurrentSegment(currentSegment);
-		
-		String roadOrientation=newMap.getRoadOrientation("MG Road",2); // Getting Road orientation for Road selected by user to put his car
-		System.out.println("roadOrientation : "+roadOrientation);
+    /*
+     * initializeScenario() - This will initialize the scenario.Following task will be performed.
+     * 						  1.Get Road details from input file.
+     * 						  2.Build RoadMap
+     * 						  3.Get number of cars as Input variable.
+     * 						  4.Initialize all cars
+     * */
+    
+    public void initializeScenario(int numberOfCars,String fileName,String roadName,int laneNumber){
+    	
+    	ArrayList<Road> roadList=r1.readRoadInput(fileName);    // and generating Road from it.
+    	newMap=new RoadMap(roadList);
+    	
+    	/********* Creating a Car that can be controlled by user as per custom choice ************/
+    	
+    	newCar=new Car();
+    	
+    	newCar.setCurrentLane(laneNumber);
+    	
+    	RoadSegment currentSegment=newMap.getRoadSegmentFromRoadName(roadName,laneNumber); 
+    	     /*Finding Current segment for a Car*/
+    	newCar.setCurrentSegment(currentSegment);
+    	
+    	String roadOrientation=newMap.getRoadOrientation(roadName,laneNumber); 
+    	     /*Getting Road orientation for Road selected by user to put his car*/
+		//System.out.println("roadOrientation : "+roadOrientation);
 		if(roadOrientation==null){
 			System.out.println("Road Do not Exist. Please enter Correct Road");
 			return;
 		}
 		
-		String carDirection=newCar.getCarDirection(roadOrientation,2);  // Calculation direction of a car.
+		String carDirection=newCar.getCarDirection(roadOrientation,laneNumber);  
+			/*Calculation direction of a car.*/
 		if(carDirection==null){
 			System.out.println("Wrong Direction.");
 			return;
 		}
-		
 		newCar.setDirection(carDirection);
-		newCar.setCarPosition(0,0);
-		newCar.getCarCoordinate();
-		
-		int i=0;
-		while(i++!=35){
+		newCar.setCarInitialPosition(currentSegment,laneNumber,carDirection);
+		//newCar.setCarPosition(4.0,2.0);
+    	
+		/******** Initialization Done **********/
+		newCar.getCarStatus();
+    }
+    
+    public void startScenario(){
+    	int i=0;
+		while(i++!=20){
 			if(!newCar.accelerate()){
 				System.out.println(" *** Negative Reward at iteration : "+i);
 				break;
 			} 
 			newCar.getCarStatus();
-			//newCar.getCarCoordinate();
-			//newCar.getCurrentSpeed();
-			//newCar.getCurrentLane();
 		}
 		
-		//newCar.brake();
-		//newCar.accelerate();
-		//newCar.getCarCoordinate();
-		//newCar.getCurrentSpeed();
-	}
+//		i=0;
+//		while(i++!=10){
+//			if(!newCar.brake()){
+//				System.out.println(" *** Negative Reward at iteration : "+i);
+//				break;
+//			}
+//			newCar.getCarStatus();
+//		}
+    }
     
      
     //How will time be managed ?
