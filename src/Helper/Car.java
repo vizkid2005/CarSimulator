@@ -62,7 +62,6 @@ public class Car {
 	public void xCoordinate(double x){
 		this.xCoordinate=x;
 	}
-	
 	public void yCoordinate(double y){
 		this.yCoordinate=y;
 	}
@@ -135,11 +134,14 @@ public class Car {
 		return this.currentLane;
 	}
 	
-	public void getCarCoordinate(){
+	public Coordinates getCarCoordinates(){
+
+        Coordinates c = new Coordinates(xCoordinate, yCoordinate);
 		System.out.println("***************** Car Co-ordinate Status *******************");
 		System.out.println("xCoordinate : "+xCoordinate) ;
 		System.out.println("yCoordinate : "+yCoordinate) ;
-	}
+        return c;
+    }
 	
 	public void getCurrentSpeed(){
 		System.out.println("************** Car Current Speed *******************");
