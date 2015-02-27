@@ -7,6 +7,8 @@ import Helper.Road;
 import Helper.RoadSegment;
 import Initializers.ReadRoadInput;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
@@ -18,6 +20,7 @@ public class Scenario {
 	ReadRoadInput r1=new ReadRoadInput();                   // Reading coordinated from inputFile
 	RoadMap newMap;						                   // Creating RoadMap from Roads generated.
 	Car newCar;                                   // Creating a Car
+	boolean reward=true;
 	public Scenario(RoadMap map, ArrayList<Car> allCars, Policy defaultPolicy){
 
     }
@@ -58,7 +61,7 @@ public class Scenario {
     	
     	String roadOrientation=newMap.getRoadOrientation(roadName,laneNumber); 
     	     /*Getting Road orientation for Road selected by user to put his car*/
-		//System.out.println("roadOrientation : "+roadOrientation);
+		System.out.println("roadOrientation : "+roadOrientation);
 		if(roadOrientation==null){
 			System.out.println("Road Do not Exist. Please enter Correct Road");
 			return;
@@ -80,24 +83,84 @@ public class Scenario {
     
     public void startScenario(){
     	int i=0;
-		while(i++!=20){
-			if(!newCar.accelerate()){
-				System.out.println(" *** Negative Reward at iteration : "+i);
-				break;
-			} 
-			newCar.getCarStatus();
-		}
-		
-//		i=0;
-//		while(i++!=10){
-//			if(!newCar.brake()){
-//				System.out.println(" *** Negative Reward at iteration : "+i);
-//				break;
-//			}
-//			newCar.getCarStatus();
-//		}
+    	
+    	InputStreamReader reader=new InputStreamReader(System.in);
+    	BufferedReader buf=new BufferedReader(reader);
+    	
+    	do{
+    		System.out.println("Enter Next Action");
+    		try{
+    		String input=buf.readLine();
+    		System.out.println("You decided to take Action : "+input);
+    		
+    		if(input.equals("accelerate")){
+    			//System.out.println("Action : Accelerate");
+    			if(continueScenario(newCar.accelerate())){
+    				newCar.getCarStatus();
+    			}
+    			else{
+    				System.out.println(" **** NEGATIVE REWARD **** ");
+    				break;
+    				
+    			}
+    		}
+    		else if(input.equals("brake")){
+    			//System.out.println("Action : brake");
+    			if(continueScenario(newCar.brake())){
+    				newCar.getCarStatus();
+    			}
+    			else{
+    				System.out.println(" **** NEGATIVE REWARD **** ");
+    				break;
+    			}
+    		}
+    		else if(input.equals("doNothing")){
+    			//System.out.println("Action : doNothing");
+    			if(continueScenario(newCar.doNothing())){
+    				newCar.getCarStatus();
+    			}
+    			else{
+    				System.out.println(" **** NEGATIVE REWARD **** ");
+    				break;
+    			}
+    		}
+    		else if(input.equals("moveRightLane")){
+    			//System.out.println("Action : moveRightLane");
+    			if(continueScenario(newCar.moveRightLane())){
+    				newCar.getCarStatus();
+    			}
+    			else{
+    				System.out.println(" **** NEGATIVE REWARD **** ");
+    				break;
+    			}
+    		}
+    		else if(input.equals("moveLeftLane")){
+    			//System.out.println("Action : moveLeftLane");
+    			if(continueScenario(newCar.moveLeftLane())){
+    				newCar.getCarStatus();
+    			}
+    			else{
+    				System.out.println(" **** NEGATIVE REWARD **** ");
+    				break;
+    			}
+    		}
+    		else{
+    			System.out.println(" Wrong Input Entered . Closing the simulator ");
+    			break;
+    		}
+    		}
+    		catch(Exception e){
+    			System.out.println("Exception :"+e.getStackTrace());
+    		}
+    		
+    	}while(true);
+
     }
     
-     
+    boolean continueScenario(boolean reward){
+    	//newCar.getCarStatus();
+    	return this.reward&reward;
+    }
+    
     //How will time be managed ?
 }

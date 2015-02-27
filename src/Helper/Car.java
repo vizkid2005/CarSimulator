@@ -190,7 +190,7 @@ public class Car {
 			// S=ut+0.5at^2 Equation of Motion
         this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
 	        
-        if(this.prevDist>=0.5){                      // End of Segment
+        if(this.prevDist>=1){                      // End of Segment
 	        	this.prevDist=0.0;
 	        	this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
@@ -226,7 +226,7 @@ public class Car {
 		else{
 	        this.currentDist = this.currentDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0))); // s = ut - 1/2 at^2
 	        this.prevDist=this.prevDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-	        if(this.prevDist>=0.5){                      // End of Segment
+	        if(this.prevDist>=1){                      // End of Segment
 	        	this.prevDist=0.0;
 	        	this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
@@ -251,25 +251,267 @@ public class Car {
         return reward;
     }
 	
-//	public boolean moveRightLane(){
-//		System.out.println("***** Move Right Lane ******");
-//		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-//		// S=ut+0.5at^2 Equation of Motion
-//		this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-//		if(this.prevDist>=0.5){
-//        	this.prevDist=0.0;
-//        	this.currentSegment=getNextSegment();
-//        	if(this.currentSegment==null){
-//        		reward=false;
-//        	}
-//        	else{
-//        		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
-//        	}
-//        }	
-//    if(this.currentSegment!=null){
-//        calculateNewCoordinates();
-//    }
-//	}
+	public boolean doNothing(){
+		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+		// S=ut+0.5at^2 Equation of Motion
+	    this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	        
+	    if(this.prevDist>=1){                      // End of Segment
+	        	this.prevDist=0.0;
+	        	this.currentSegment=getNextSegment();
+	        	if(this.currentSegment==null){
+	        		reward=false;
+	        	}
+	        	else{
+	        		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+	        	}
+	        }
+	    else{
+	    	if(this.currentSegment!=null){
+		        calculateNewCoordinates();
+		    }
+	    }
+		
+	    return reward;
+	}
+	
+	/*
+	 * moveRightLane() : This action will change lane of car to right.If Car is already in the right
+	 * 					 most lane, then if user tried using moveRightLane() , the car will be run out of 
+	 * 					 map and results into negative reward.Please note that this action can not be
+	 * 				     used for changing road but can be used before changing road to get car in 
+	 * 					 rightmost lane and then use either doNothing() or Accelerate() to change 
+	 * 					 the Road.So even if you are at intersection of Roads and try using moveRightLane()
+	 * 				     this might give negative reward depending on the lane you are in.
+	 * */
+	
+	public boolean moveRightLane(){
+		System.out.println("***** Move Right Lane ******");
+		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+			// S=ut+0.5at^2 Equation of Motion
+	    this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	    
+	    if(this.prevDist>=1){                      // End of Segment
+        	this.prevDist=0.0;
+        	this.currentSegment=getNextSegment();
+        	if(this.currentSegment==null){
+        		reward=false;
+        		return reward;
+        	}
+        	else{
+        		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+        	}
+        }
+	    
+	    /************ Calculate the possible next lane ***********************/
+	    
+	    if(this.direction=="east"){
+	    	if(this.currentLane==3||this.currentLane==2) {
+	    		this.currentLane-=1;
+	    		calculateNewCoordinates();                /* Get New Y Coordinate */
+	    		this.xCoordinate=this.xCoordinate+0.1667; /* Get New X Coordinate */
+	    		reward=true;
+	    	}
+	    	else{
+//	    		if(this.prevDist>=1 && getNextSegment()==null){      // its an intersection segment &
+//	    			reward=false;                                    // there is no South segment
+//	    		}
+//	    		else{
+//	    			this.prevDist=0.0;
+//		        	this.currentSegment=getNextSegment();
+//		        	System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+//	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+//	        		reward=true;
+//	    		}
+	    		reward=false;
+	    	}
+	    }
+	    else if(this.direction=="west"){
+	    	if(this.currentLane==4||this.currentLane==5) {
+	    		this.currentLane+=1;
+	    		calculateNewCoordinates();                /* Get New Y Coordinate */
+	    		this.xCoordinate=this.xCoordinate-0.1667; /* Get New X Coordinate */
+	    		reward=true;
+	    	}
+	    	else{
+//	    		if(this.prevDist>=1 && getNextSegment()==null){      // its an intersection segment &
+//	    			reward=false;                                    // there is no North segment
+//	    		}
+//	    		else{
+//	    			this.prevDist=0.0;
+//		        	this.currentSegment=getNextSegment();
+//		        	System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+//	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+//	        		reward=true;
+//	    		}
+	    		reward=false;
+	    	}
+	    } 
+	    else if(this.direction=="south"){
+	    	if(this.currentLane==3||this.currentLane==2) {
+	    		this.currentLane-=1;
+	    		calculateNewCoordinates();                /* Get New X Coordinate */
+	    		this.yCoordinate=this.yCoordinate-0.1667; /* Get New Y Coordinate */
+	    		reward=true;
+	    	}
+	    	else{
+//	    		if(this.prevDist>=1 && getNextSegment()==null){      // its an intersection segment &
+//	    			reward=false;                                    // there is no East segment
+//	    		}
+//	    		else{
+//	    			this.prevDist=0.0;
+//		        	this.currentSegment=getNextSegment();
+//		        	System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+//	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+//	        		reward=true;
+//	    		}
+	    		reward=false;
+	    	}
+	    }
+	    else if(this.direction=="north"){
+	    	if(this.currentLane==4||this.currentLane==5) {
+	    		this.currentLane+=1;
+	    		calculateNewCoordinates();                /* Get New X Coordinate */
+	    		this.yCoordinate=this.yCoordinate+0.1667; /* Get New Y Coordinate */
+	    		reward=true;
+	    	}
+	    	else{
+//	    		if(this.prevDist>=1 && getNextSegment()==null){      // its an intersection segment &
+//	    			reward=false;                                    // there is no North segment
+//	    		}
+//	    		else{
+//	    			this.prevDist=0.0;
+//		        	this.currentSegment=getNextSegment();
+//		        	System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+//	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+//	        		reward=true;
+//	    		}
+	    		reward=false;
+	    	}
+	    }
+	    return reward;
+	}
+	
+	/*
+	 * moveLeftLane() : This action will change lane of car to Left.If Car is already in the left
+	 * 					 most lane, then if user tried using moveLeftLane() , the car will be run out of 
+	 * 					 map and results into negative reward.Please note that this action can not be
+	 * 				     used for changing road but can be used before changing road to get car in 
+	 * 					 leftmost lane and then use either doNothing() or Accelerate() to change 
+	 * 					 the Road.So even if you are at intersection of Roads and try using moveRightLane()
+	 * 				     this might give negative reward depending on the lane you are in.
+	 * */
+	
+	public boolean moveLeftLane(){
+		System.out.println("***** Move Left Lane ******");
+		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+			// S=ut+0.5at^2 Equation of Motion
+	    this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	    
+	    if(this.prevDist>=1){                      // End of Segment
+        	this.prevDist=0.0;
+        	this.currentSegment=getNextSegment();
+        	if(this.currentSegment==null){
+        		reward=false;
+        		return reward;
+        	}
+        	else{
+        		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+        	}
+        }
+	    
+	    /************ Calculate the possible next lane ***********************/
+	    
+	    if(this.direction=="east"){
+	    	if(this.currentLane==1||this.currentLane==2) {
+	    		this.currentLane+=1;
+	    		calculateNewCoordinates();                /* Get New Y Coordinate */
+	    		this.xCoordinate=this.xCoordinate-0.1667; /* Get New X Coordinate */
+	    		reward=true;
+	    	}
+	    	else{
+//	    		if(this.prevDist>=1 && getNextSegment()==null){      // its an intersection segment &
+//	    			reward=false;                                    // there is no South segment
+//	    		}
+//	    		else{
+//	    			this.prevDist=0.0;
+//		        	this.currentSegment=getNextSegment();
+//		        	System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+//	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+//	        		reward=true;
+//	    		}
+	    		reward=false;
+	    	}
+	    }
+	    else if(this.direction=="west"){
+	    	if(this.currentLane==6||this.currentLane==5) {
+	    		this.currentLane-=1;
+	    		calculateNewCoordinates();                /* Get New Y Coordinate */
+	    		this.xCoordinate=this.xCoordinate+0.1667; /* Get New X Coordinate */
+	    		reward=true;
+	    	}
+	    	else{
+//	    		if(this.prevDist>=1 && getNextSegment()==null){      // its an intersection segment &
+//	    			reward=false;                                    // there is no North segment
+//	    		}
+//	    		else{
+//	    			this.prevDist=0.0;
+//		        	this.currentSegment=getNextSegment();
+//		        	System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+//	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+//	        		reward=true;
+//	    		}
+	    		reward=false;
+	    	}
+	    } 
+	    else if(this.direction=="south"){
+	    	if(this.currentLane==1||this.currentLane==2) {
+	    		this.currentLane+=1;
+	    		calculateNewCoordinates();                /* Get New X Coordinate */
+	    		this.yCoordinate=this.yCoordinate+0.1667; /* Get New Y Coordinate */
+	    		reward=true;
+	    	}
+	    	else{
+//	    		if(this.prevDist>=1 && getNextSegment()==null){      // its an intersection segment &
+//	    			reward=false;                                    // there is no East segment
+//	    		}
+//	    		else{
+//	    			this.prevDist=0.0;
+//		        	this.currentSegment=getNextSegment();
+//		        	System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+//	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+//	        		reward=true;
+//	    		}
+	    		reward=false;
+	    	}
+	    }
+	    else if(this.direction=="north"){
+	    	if(this.currentLane==6||this.currentLane==5) {
+	    		this.currentLane-=1;
+	    		calculateNewCoordinates();                /* Get New X Coordinate */
+	    		this.yCoordinate=this.yCoordinate-0.1667; /* Get New Y Coordinate */
+	    		reward=true;
+	    	}
+	    	else{
+//	    		if(this.prevDist>=1 && getNextSegment()==null){      // its an intersection segment &
+//	    			reward=false;                                    // there is no North segment
+//	    		}
+//	    		else{
+//	    			this.prevDist=0.0;
+//		        	this.currentSegment=getNextSegment();
+//		        	System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+//	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+//	        		reward=true;
+//	    		}
+	    		reward=false;
+	    	}
+	    }
+	    return reward;
+	}	
+	
 	
 	/*
 	 * getNextSegment() : As each road is just the connection of different segments,this will give 
@@ -433,20 +675,20 @@ public class Car {
     
 	public void getCarStatus(){
 		System.out.println("***************** Car Status *******************");
-		System.out.println("MakeDate : "+makeDate);
-		System.out.println("color : "+color) ;
+		//System.out.println("MakeDate : "+makeDate);
+		//System.out.println("color : "+color) ;
 		System.out.println("currSpeed : "+currSpeed) ;
 		System.out.println("currentDist : "+currentDist);
 		System.out.println("prevDist : "+prevDist);
-		System.out.println("maxSpeed : "+maxSpeed) ;
-	    System.out.println("rateOfAccl : "+rateOfAccl) ;
-		System.out.println("rateOfBreakking : "+rateOfBraking) ;
+		//System.out.println("maxSpeed : "+maxSpeed) ;
+	    //System.out.println("rateOfAccl : "+rateOfAccl) ;
+		//System.out.println("rateOfBreakking : "+rateOfBraking) ;
 		System.out.println("xCoordinate : "+xCoordinate) ;
 		System.out.println("yCoordinate : "+yCoordinate) ;
-		System.out.println("type : "+type) ;  
+		//System.out.println("type : "+type) ;  
 		System.out.println("direction : "+direction) ; 
 		System.out.println("currentLane : "+currentLane) ; 
-		System.out.println("currentAction : "+currentAction);
+		//System.out.println("currentAction : "+currentAction);
 		isControlled=true;
 	}
     
