@@ -17,11 +17,13 @@ import java.util.Iterator;
  */
 public class Scenario {
 	
-	ReadRoadInput r1=new ReadRoadInput();                   // Reading coordinated from inputFile
-	RoadMap newMap;						                   // Creating RoadMap from Roads generated.
+	ReadRoadInput r1=new ReadRoadInput();           // Reading coordinated from inputFile
+	RoadMap newMap;						           // Creating RoadMap from Roads generated.
 	Car newCar;                                   // Creating a Car
+    int id;                                        //Uniquely identifies each scenario
 	public Scenario(RoadMap map, ArrayList<Car> allCars, Policy defaultPolicy){
 
+        id = (int) Math.random()*100000; //5 digit random number
     }
 
     public Scenario() {
@@ -42,12 +44,12 @@ public class Scenario {
      * 						  3.Get number of cars as Input variable.
      * 						  4.Initialize all cars
      * */
-    
+
+    //Has to be modified a bit. To get the sequence of operations correct.
     public void initializeScenario(int numberOfCars,String fileName,String roadName,int laneNumber){
     	
     	ArrayList<Road> roadList=r1.readRoadInput(fileName);    // and generating Road from it.
     	newMap=new RoadMap(roadList);
-
         //Even if using single car, try putting it in an ArrayList
         ArrayList<Car> allCars = new ArrayList<Car>();
     	/********* Creating a Car that can be controlled by user as per custom choice ************/
@@ -101,6 +103,14 @@ public class Scenario {
 //		}
     }
 
+    /*
+    2/26/2015
+    To do - Huzefa
+    Collision
+    Almost Done - Car Repeatable
+    Default policy
+    Status Object
+     */
     public boolean isCollision(ArrayList<Car> allCars){
         //We check the distance between every 2 cars say Car I and Car J
         Iterator<Car> carIter1 = allCars.iterator();
@@ -120,10 +130,11 @@ public class Scenario {
                 double carJY = carJ.getCarCoordinates().getY();
 
                 if(carIX > carJX - 5 && carIX < carJX + 5){
-
+                    //Will continue tomorrow, too tired.. Going to sleep :)
+                    if (carIY)
                 }
                 else{
-                    //Check for y bounds
+                    if
                 }
             }
         }
