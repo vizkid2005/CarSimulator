@@ -25,7 +25,15 @@ public class RoadMap {
     public RoadMap(String roadFile){
         ReadRoadInput r = new ReadRoadInput();
         ArrayList<Road> roadList = r.readRoadInput(roadFile);
-
+        listOfRoads = roadList;
+        AllRoadSegmentPointers = new ArrayList<RoadSegment>();
+        ArrayList<RoadSegment> allvisited = new ArrayList<RoadSegment>(); //Just for debugging, remove when not needed
+        checkDuplicates(roadList); //Check for duplicates first, System exits if any duplicates are found.
+        getIntersectionPoints(roadList); //Calculate intersection points of all roads.
+        //printIntersectionPoints(roads); //Debug method to check if all roads have appropriate intersection points
+        buildRoadMap(roadList); //The core method where all the magic happens
+        System.out.println();
+        recursivePrint(RoadStartPointers.get(0),2,allvisited); //Inorder printing of the roads
     }
     //The constructor is responsible for building everything.
     public RoadMap(ArrayList<Road> roads){
@@ -314,7 +322,7 @@ public class RoadMap {
         }
         allvisited.add(startPoint);
         AllRoadSegmentPointers.add(startPoint);
-        System.out.print("X: " + startPoint.getPointInGrid().getX() + " Y: " + startPoint.getPointInGrid().getY() + " -> ");
+        System.out.println("X: " + startPoint.getPointInGrid().getX() + " Y: " + startPoint.getPointInGrid().getY() + " -> ");
         if (direction == 1) {
             recursivePrint(startPoint.getNorthSegment(), 1, allvisited);
             recursivePrint(startPoint.getEastSegment(), 2, allvisited);

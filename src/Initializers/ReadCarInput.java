@@ -48,7 +48,18 @@ public class ReadCarInput {
 
         for(int i =0;i<carList.size();i++){
             System.out.println();
-            System.out.println(carList.get(i).);
+            System.out.println(carList.get(i).getColor());
+            System.out.println(carList.get(i).getType());
+            System.out.println(carList.get(i).getCurrSpeed());
+            System.out.println(carList.get(i).getRateOfAccl());
+            System.out.println(carList.get(i).getRateOfBraking());
+            System.out.println(carList.get(i).getMaxSpeed());
+            System.out.println(carList.get(i).getCurrentLane());
+            System.out.println(carList.get(i).getCurrentSegment());
+            System.out.println(carList.get(i).getNextSegment());
+            System.out.println(carList.get(i).getDirection());
+            System.out.println(carList.get(i).getCarCoordinates().getX()+ " -- "+ carList.get(i).getCarCoordinates().getY());
+
         }
 
         return carList;

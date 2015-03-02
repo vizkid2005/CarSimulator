@@ -67,11 +67,11 @@ public class Car {
         this.setRateOfBraking(rateOfBraking);
         this.setMaxSpeed(maxSpeed);
         this.setCurrentLane(currentLane);
-        this.currentSegment = map.getRoadSegmentFromRoadName(initialRoad,currentLane);
         this.setIsControlled(isControlled);
         this.setLooping(isLooping);
+        this.setDirection(this.getCarDirection(map.getRoadOrientation(initialRoad,currentLane),currentLane));
+        this.currentSegment = map.getRoadSegmentFromRoadName(initialRoad,currentLane);
         this.getNextSegment();
-        this.getCarDirection(map.getRoadOrientation(initialRoad,currentLane),currentLane);
         this.setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
 }
 	
