@@ -21,11 +21,13 @@ public class Scenario {
 	
 	ReadRoadInput r1=new ReadRoadInput();           // Reading coordinated from inputFile
 	RoadMap newMap;						           // Creating RoadMap from Roads generated.
-	Car newCar;                                   // Creating a Car
+	Car[] newCar;                                   // Creating a Car
 	boolean reward=true;
+	String action="wrong action";
 	int id;           // Uniquely identifies each scenario
 	int time;         // Time for Episode  
-	//int episode;      // Episode id
+	double positiveReward=1.0; // Reward Values for positive Action
+	double negativeReward=0.0; // Reward values for negative Action
 
 	//Gives the status of the entire environment in some form that is understandable
     public void showStatus(){
@@ -52,13 +54,18 @@ public class Scenario {
         //Even if using single car, try putting it in an ArrayList
         ArrayList<Car> allCars = new ArrayList<Car>();
     	/********* Creating a Car that can be controlled by user as per custom choice ************/
-    	newCar=new Car();
-    	allCars.add(newCar);
-    	newCar.setCurrentLane(laneNumber);
+    	newCar=new Car[numberOfCars];
+    	
+    	for(int i=0;i<newCar.length;i++){
+    		newCar[i]=new Car();
+    		allCars.add(newCar[i]);
+    	}
+    	
+    	newCar[0].setCurrentLane(laneNumber);
     	
     	RoadSegment currentSegment=newMap.getRoadSegmentFromRoadName(roadName,laneNumber); 
     	     /*Finding Current segment for a Car*/
-    	newCar.setCurrentSegment(currentSegment);
+    	newCar[0].setCurrentSegment(currentSegment);
     	
     	String roadOrientation=newMap.getRoadOrientation(roadName,laneNumber); 
     	     /*Getting Road orientation for Road selected by user to put his car*/
@@ -68,18 +75,18 @@ public class Scenario {
 			return;
 		}
 		
-		String carDirection=newCar.getCarDirection(roadOrientation,laneNumber);  
+		String carDirection=newCar[0].getCarDirection(roadOrientation,laneNumber);  
 			/*Calculation direction of a car.*/
 		if(carDirection==null){
 			System.out.println("Wrong Direction.");
 			return;
 		}
-		newCar.setDirection(carDirection);
-		newCar.setCarInitialPosition(currentSegment,laneNumber,carDirection);
+		newCar[0].setDirection(carDirection);
+		newCar[0].setCarInitialPosition(currentSegment,laneNumber,carDirection);
 		//newCar.setCarPosition(4.0,2.0);
     	
 		/******** Initialization Done **********/
-		newCar.getCarStatus();
+		newCar[0].getCarStatus();
     }
     
     public void startScenario(){
@@ -96,10 +103,12 @@ public class Scenario {
     		time++;
     		if(input.equals("accelerate")){
     			//System.out.println("Action : Accelerate");
-    			if(continueScenario(newCar.accelerate())){
-    				newCar.getCarStatus();
+    			this.action="accelerate";
+    			if(continueScenario(newCar[0].accelerate())){
+    				newCar[0].getCarStatus();
     			}
     			else{
+    				reward=false;
     				System.out.println(" **** NEGATIVE REWARD **** ");
     				break;
     				
@@ -107,45 +116,54 @@ public class Scenario {
     		}
     		else if(input.equals("brake")){
     			//System.out.println("Action : brake");
-    			if(continueScenario(newCar.brake())){
-    				newCar.getCarStatus();
+    			this.action="brake";
+    			if(continueScenario(newCar[0].brake())){
+    				newCar[0].getCarStatus();
     			}
     			else{
+    				reward=false;
     				System.out.println(" **** NEGATIVE REWARD **** ");
     				break;
     			}
     		}
     		else if(input.equals("doNothing")){
     			//System.out.println("Action : doNothing");
-    			if(continueScenario(newCar.doNothing())){
-    				newCar.getCarStatus();
+    			this.action="doNothing";
+    			if(continueScenario(newCar[0].doNothing())){
+    				newCar[0].getCarStatus();
     			}
     			else{
+    				reward=false;
     				System.out.println(" **** NEGATIVE REWARD **** ");
     				break;
     			}
     		}
     		else if(input.equals("moveRightLane")){
     			//System.out.println("Action : moveRightLane");
-    			if(continueScenario(newCar.moveRightLane())){
-    				newCar.getCarStatus();
+    			this.action="moveRightLane";
+    			if(continueScenario(newCar[0].moveRightLane())){
+    				newCar[0].getCarStatus();
     			}
     			else{
+    				reward=false;
     				System.out.println(" **** NEGATIVE REWARD **** ");
     				break;
     			}
     		}
     		else if(input.equals("moveLeftLane")){
+    			this.action="moveLeftLane";
     			//System.out.println("Action : moveLeftLane");
-    			if(continueScenario(newCar.moveLeftLane())){
-    				newCar.getCarStatus();
+    			if(continueScenario(newCar[0].moveLeftLane())){
+    				newCar[0].getCarStatus();
     			}
     			else{
+    				reward=false;
     				System.out.println(" **** NEGATIVE REWARD **** ");
     				break;
     			}
     		}
     		else{
+    			reward=false;
     			System.out.println(" Wrong Input Entered . Closing the simulator ");
     			break;
     		}
@@ -164,8 +182,22 @@ public class Scenario {
     }
     
 
-    void createPredicateFile(){
-    	
+    void firstOrderLogic(){
+    	System.out.println("Episode : "+id);
+    	String predlist=new String();
+    	for(int i=0;i<newCar.length;i++){
+    		if(newCar[i].)
+    	}
+	}
+    
+    double getReward(){
+    	if(this.reward) return this.positiveReward;
+    	return this.negativeReward;
+    }
+    
+    void setReward(double positive,double negative){
+    	this.positiveReward=positive;
+    	this.negativeReward=negative;
     }
 		
 //		i=0;

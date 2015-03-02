@@ -69,7 +69,7 @@ public class Car {
         this.setMaxSpeed(maxSpeed);
         this.setCurrentLane(currentLane);
         this.currentSegment = map.getRoadSegmentFromRoadName(initialRoad,currentLane);
-        this,
+        //this,
     }
 	
 	/*********************** Setters *********************/
@@ -176,6 +176,14 @@ public class Car {
 	public RoadSegment getCurrentSegment(){
     	return this.currentSegment;
     }
+	
+	public boolean isControlled(){
+		return this.isControlled;
+	}
+	
+	public String getDirection(){
+		return this.direction;
+	}
 	
 	/*
 	 * getCarDirection() - Depending on the Road orientation and lane of a car , this function will
