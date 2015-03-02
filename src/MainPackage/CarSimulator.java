@@ -29,6 +29,8 @@ public class CarSimulator {
         
 
     }
+	
+	
     
     public State getCurrentState(){
 		State currentState = new State(cars);

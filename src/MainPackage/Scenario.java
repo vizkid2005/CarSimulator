@@ -2,6 +2,7 @@ package MainPackage;
 
 import BigMap.RoadMap;
 import Helper.Car;
+import Helper.FileUtilities;
 import Helper.Policy;
 import Helper.Road;
 import Helper.RoadSegment;
@@ -28,6 +29,7 @@ public class Scenario {
 	int time;         // Time for Episode  
 	double positiveReward=1.0; // Reward Values for positive Action
 	double negativeReward=0.0; // Reward values for negative Action
+	String predicatefile;
 
 	//Gives the status of the entire environment in some form that is understandable
     public void showStatus(){
@@ -45,10 +47,15 @@ public class Scenario {
      * */
 
     //Has to be modified a bit. To get the sequence of operations correct.
+    
+    public void setPredicatefile(String predicatefile){
+    	this.predicatefile=predicatefile;
+    }
+    
     public void initializeScenario(int numberOfCars,String fileName,String roadName,int laneNumber){
     	
     	time=1; // Initializing the time for Episode
-    	id = (int) Math.random()*100000; //5 digit random number
+    	id = (int) Math.round(Math.random()*100000); //5 digit random number
     	ArrayList<Road> roadList=r1.readRoadInput(fileName);    // and generating Road from it.
     	newMap=new RoadMap(roadList);
         //Even if using single car, try putting it in an ArrayList
@@ -56,9 +63,9 @@ public class Scenario {
     	/********* Creating a Car that can be controlled by user as per custom choice ************/
     	//newCar=new Car[numberOfCars];
     	
+        newCar=new ArrayList<Car>();
     	for(int i=0;i<numberOfCars;i++){
-    		newCar=new ArrayList<Car>();
-    		allCars.add(new Car());
+    		newCar.add(new Car());
     	}
     	
     	newCar.get(0).setCurrentLane(laneNumber);
@@ -172,8 +179,15 @@ public class Scenario {
     			System.out.println("Exception :"+e.getStackTrace());
     		}
     		
+    		/******* Adding to First Order Logic ***********/
+    		
+    		firstOrderLogic();
+    		
+    		/***********************************************/
+    		
     	}while(true);
-
+    	
+    	firstOrderLogic();
     }
     
     boolean continueScenario(boolean reward){
@@ -186,36 +200,86 @@ public class Scenario {
     	System.out.println("Episode : "+id);
     	String predList=new String();
     	for(Car car:newCar){
-    		predList+="LOCATED_AT_TIME("+this.id+this.time+car.getDirection()+car.getCarCoordinates().getX()+
-					car.getCarCoordinates().getY()+car.getColor()+car.getType()+car.getCurrSpeed()+
+    		predList+="LOCATED_AT_TIME("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
+					car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
 					car.getRateOfAccl()+")\n";
     		if(car.isControlled()){
-    			predList+="TOOK_ACTION("+this.id+this.time+this.action+")\n";
-    			predList+="GOT_REWARD("+this.id+this.time+this.action+getReward()+")\n";
+    			predList+="TOOK_ACTION("+this.id+","+this.time+","+this.action+")\n";
+    			predList+="GOT_REWARD("+this.id+","+this.time+","+this.action+","+getReward()+")\n";
     			for(Car anotherCar:newCar){
     				if(car!=anotherCar&&car.getCurrentLane()==anotherCar.getCurrentLane()
     						&&car.getDirection()==anotherCar.getDirection()){
     					if(car.getDirection()=="east"){
     						if(car.getCarCoordinates().getY()>anotherCar.getCarCoordinates().getY()){
-    							predList+="IN_FRONT("+this.id+this.time+car.getDirection()+car.getCarCoordinates().getX()+
-    	    							   car.getCarCoordinates().getY()+car.getColor()+car.getType()+car.getCurrSpeed()+
+    							predList+="IN_FRONT("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
+    	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
     	    							   car.getRateOfAccl()+")\n";
     						}
     						else{
-    							predList+="IN_BACK("+this.id+this.time+car.getDirection()+car.getCarCoordinates().getX()+
-    	    							   car.getCarCoordinates().getY()+car.getColor()+car.getType()+car.getCurrSpeed()+
-    	    							   car.getRateOfAccl()+")\n";
+    							predList+="IN_BACK("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
+  	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
+  	    							   car.getRateOfAccl()+")\n";
     						}
-    						
+    					  predList+="DIST_FROM("+this.id+","+this.time+","+
+    							      getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
+    							    	anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+")\n";
+    					  
     					}
-    					
-    					
+    					if(car.getDirection()=="west"){
+    						if(car.getCarCoordinates().getY()<anotherCar.getCarCoordinates().getY()){
+    							predList+="IN_FRONT("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
+ 	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
+ 	    							   car.getRateOfAccl()+")\n";
+    						}
+    						else{
+    							predList+="IN_BACK("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
+  	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
+  	    							   car.getRateOfAccl()+")\n";
+    						}
+      					  predList+="DIST_FROM("+this.id+","+this.time+","+
+							      getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
+							    	anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+")\n";
+    					  
+    					}
+    					if(car.getDirection()=="north"){
+    						if(car.getCarCoordinates().getX()<anotherCar.getCarCoordinates().getX()){
+    							predList+="IN_FRONT("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
+ 	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
+ 	    							   car.getRateOfAccl()+")\n";
+    						}
+    						else{
+    							predList+="IN_BACK("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
+  	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
+  	    							   car.getRateOfAccl()+")\n";
+    						}
+      					  predList+="DIST_FROM("+this.id+","+this.time+","+
+							      getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
+							    	anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+")\n";
+    					  
+    					}
+    					if(car.getDirection()=="south"){
+    						if(car.getCarCoordinates().getX()>anotherCar.getCarCoordinates().getX()){
+    							predList+="IN_FRONT("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
+ 	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
+ 	    							   car.getRateOfAccl()+")\n";
+    						}
+    						else{
+    							predList+="IN_BACK("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
+ 	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
+ 	    							   car.getRateOfAccl()+")\n";
+    						}
+      					  predList+="DIST_FROM("+this.id+","+this.time+","+
+							      getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
+							    	anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+")\n";
+    					  
+    					}
     				}
     	    			
     			}
     			
     		}
     	}
+    	FileUtilities.write2File(predList,predicatefile, true);
 	}
     
     double getDistanceBetween(double x1,double y1,double x2,double y2){
