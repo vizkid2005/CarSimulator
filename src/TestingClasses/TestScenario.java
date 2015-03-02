@@ -10,7 +10,7 @@ public class TestScenario {
 		String predicateFile="E:\\Spring 2015\\Indepenedent Study\\CarSimulator\\CarSimulator\\output\\FOL.txt";
 		Scenario newScenario=new Scenario();
 		newScenario.setPredicatefile(predicateFile);
-		newScenario.initializeScenario(1,fileName,"Waazalwar Circle",5);
+		newScenario.initializeScenario(1,fileName,"John Hinkle Place",5);
 		newScenario.startScenario();
 	}
 	
