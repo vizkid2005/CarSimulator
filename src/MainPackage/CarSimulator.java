@@ -7,6 +7,7 @@ import Helper.Road;
 import java.util.ArrayList;
 
 import Helper.State;
+import Initializers.ReadCarInput;
 
 /**
  * Use this class and this class only to run your learner.
@@ -18,20 +19,21 @@ import Helper.State;
  */
 public class CarSimulator {
 
-    public Car[] cars=new Car[10];
-	
+    static RoadMap map;
+    static ArrayList<Car> carList;
 	public static void main(String[] args)throws Exception{
-		String roadFile = new String();
+		String roadFile = new String("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\Roads.csv");
+        String carFile = new String("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\Cars.txt");
         //Just this call should suffice creating the RoadMap, There are a lot of messed up function calls that have to be resolved.
-         
-        RoadMap map = new RoadMap(roadFile);
-        
-        
+        map = new RoadMap(roadFile);
+        ReadCarInput rci = new ReadCarInput();
+        carList = rci.readCarInput(map, carFile);
+        Scenario s = new Scenario();
 
     }
     
     public State getCurrentState(){
-		State currentState = new State(cars);
+		State currentState = new State(carList);
 		return currentState;
 	}
 }
