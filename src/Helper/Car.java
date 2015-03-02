@@ -12,14 +12,17 @@ import BigMap.RoadMap;
 public class Car {
 	//DecimalFormat df = new DecimalFormat("###.##");
 	DecimalFormat df = new DecimalFormat("#.00000");
-	double TIME=Double.parseDouble(df.format(1.0/60.0)); // Time set to 10 Sec
+	double TIME=Double.parseDouble(df.format(1.0/60.0)); // Time set to 1Sec used for laws of motion
 	boolean reward=true;
-	private String makeDate; //Property of a car
+    private String type; //Civilian, Cop or Rogue cars
 	private String color; //Property of the car
 	private double currSpeed; //Imperial units
 	private double maxSpeed; //Imperial units
 	private double rateOfAccl; //Imperial units
 	private double rateOfBraking; //Imperial units
+    private  int currentLane; //Indicates Lane Number
+    private boolean isControlled; //If false, follows the default policy, else has to be controlled by policy specified by user
+    private boolean isLooping; //To be set if the car is to keep looping on the same road
 
     //Crucial variable, simulates movement of car.
     private double currentDist;
@@ -29,20 +32,14 @@ public class Car {
 	private double yCoordinate;
     private RoadSegment currentSegment;
     private RoadSegment nextSegment;
-
-	private String type; //Civilian, Cop or Rogue cars
 	private String direction; //North, South, East, West
-	private  int currentLane; //Indicates Lane Number
 	private String currentAction; //Not needed
-	private boolean isControlled; //If false, follows the default policy, else has to be controlled by policy specified by user
-    private boolean isLooping; //To be set if the car is to keep looping on the same road
-
 	//RoadMap newMap=new RoadMap();          This should be in the Scenario
 
     public Car(){
-		Date date=new Date();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		makeDate=dateFormat.format(date);
+		//Date date=new Date();
+		//DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		//makeDate=dateFormat.format(date);
 		color="RED";
 		currSpeed=0.0;
 		maxSpeed=100; //mph
@@ -53,11 +50,27 @@ public class Car {
 		yCoordinate=-1.0;
 		type="REGULAR";  
 		direction="EW";
-		currentLane=1; 
-		//currentAction="STOP";
+		currentLane=1;
 		isControlled=true;
         isLooping = true;
 	}
+
+    public Car(RoadMap map, String color, String type,
+               double currSpeed, double rateOfAccl,
+                    double rateOfBraking, double maxSpeed,
+                        int currentLane, String initialRoad,
+                            boolean isLooping, boolean isControlled){
+
+        this.setCarColor(color);
+        this.setType(type);
+        this.setCurrSpeed(currSpeed);
+        this.setRateOfAccl(rateOfAccl);
+        this.setRateOfBraking(rateOfBraking);
+        this.setMaxSpeed(maxSpeed);
+        this.setCurrentLane(currentLane);
+        this.currentSegment = map.getRoadSegmentFromRoadName(initialRoad,currentLane);
+        this,
+    }
 	
 	/*********************** Setters *********************/
 	
