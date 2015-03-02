@@ -35,10 +35,11 @@ public class Car {
 	private  int currentLane; //Indicates Lane Number
 	private String currentAction; //Not needed
 	private boolean isControlled; //If false, follows the default policy, else has to be controlled by policy specified by user
+    private boolean isLooping; //To be set if the car is to keep looping on the same road
 
 	//RoadMap newMap=new RoadMap();          This should be in the Scenario
-	
-	public Car(){
+
+    public Car(){
 		Date date=new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		makeDate=dateFormat.format(date);
@@ -55,6 +56,7 @@ public class Car {
 		currentLane=1; 
 		//currentAction="STOP";
 		isControlled=true;
+        isLooping = true;
 	}
 	
 	/*********************** Setters *********************/
@@ -188,7 +190,14 @@ public class Car {
 			 return null;
 		 }
 	 }
-	
+
+    public boolean isLooping() {
+        return isLooping;
+    }
+
+    public void setLooping(boolean isLooping) {
+        this.isLooping = isLooping;
+    }
 /*
  * Accelerate : This action will accelerate Car in direction depending upon its current direction and
  *              its current lane.Also, depending upon its current segment it will decide to change the road.
@@ -767,6 +776,53 @@ public class Car {
 		//System.out.println("currentAction : "+currentAction);
 		isControlled=true;
 	}
+
+    //Call this method when a car reaches the end of the road and its isLooping flag is set to true
+    public void resetPosition(RoadSegment rs){
+        if (this.isLooping){
+            if (this.direction.equals("north")){
+                RoadSegment current = this.getCurrentSegment();
+                while(current.getSouthSegment() != null){
+                    current = current.getSouthSegment();
+                }
+                this.setCurrentSegment(current);
+            }
+            else if (this.direction.equals("east")){
+                RoadSegment current = this.getCurrentSegment();
+                while(current.getWestSegment() != null){
+                    current = current.getWestSegment();
+                }
+                this.setCurrentSegment(current);
+            }
+            else if (this.direction.equals("south")){
+                RoadSegment current = this.getCurrentSegment();
+                while(current.getNorthSegment() != null){
+                    current = current.getNorthSegment();
+                }
+                this.setCurrentSegment(current);
+            }
+            else{
+                RoadSegment current = this.getCurrentSegment();
+                while(current.getEastSegment() != null){
+                    current = current.getEastSegment();
+                }
+                this.setCurrentSegment(current);
+            }
+            //Now rest everything, except speed, let it move with currentspeed
+            //Not sure how to handle the coordinates.
+            //@Aniket, I am not calculating how the coordinates will handle, I dont want to break your code
+
+            currentDist = 0;
+            prevDist = 0;
+
+            //Handle coordinates here
+        }
+        //If the car is not supposed to loop
+        else{
+            return;
+        }
+    }
+
     
 }
 

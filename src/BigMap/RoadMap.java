@@ -3,6 +3,7 @@ package BigMap;
 import Helper.GridPoint;
 import Helper.Road;
 import Helper.RoadSegment;
+import Initializers.ReadRoadInput;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,6 +22,11 @@ public class RoadMap {
     ArrayList<RoadSegment> AllRoadSegmentPointers; //Keep pointers for each and every road segment
     ArrayList<Road> listOfRoads; //Maintain a local copy of the roads
 
+    public RoadMap(String roadFile){
+        ReadRoadInput r = new ReadRoadInput();
+        ArrayList<Road> roadList = r.readRoadInput(roadFile);
+
+    }
     //The constructor is responsible for building everything.
     public RoadMap(ArrayList<Road> roads){
         //The constructor calls all the necessary methods to initialize the Road datastructure.
@@ -308,7 +314,7 @@ public class RoadMap {
         }
         allvisited.add(startPoint);
         AllRoadSegmentPointers.add(startPoint);
-        System.out.print("X: " + startPoint.getPointInGrid().getX() + " Y: " + startPoint.getPointInGrid().getY()+" -> ");
+        System.out.print("X: " + startPoint.getPointInGrid().getX() + " Y: " + startPoint.getPointInGrid().getY() + " -> ");
         if (direction == 1) {
             recursivePrint(startPoint.getNorthSegment(), 1, allvisited);
             recursivePrint(startPoint.getEastSegment(), 2, allvisited);
