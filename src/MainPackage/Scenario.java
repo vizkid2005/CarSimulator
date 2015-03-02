@@ -21,7 +21,7 @@ public class Scenario {
 	
 	ReadRoadInput r1=new ReadRoadInput();           // Reading coordinated from inputFile
 	RoadMap newMap;						           // Creating RoadMap from Roads generated.
-	Car[] newCar;                                   // Creating a Car
+	ArrayList<Car> newCar;                                   // Creating a Car
 	boolean reward=true;
 	String action="wrong action";
 	int id;           // Uniquely identifies each scenario
@@ -54,18 +54,18 @@ public class Scenario {
         //Even if using single car, try putting it in an ArrayList
         ArrayList<Car> allCars = new ArrayList<Car>();
     	/********* Creating a Car that can be controlled by user as per custom choice ************/
-    	newCar=new Car[numberOfCars];
+    	//newCar=new Car[numberOfCars];
     	
-    	for(int i=0;i<newCar.length;i++){
-    		newCar[i]=new Car();
-    		allCars.add(newCar[i]);
+    	for(int i=0;i<numberOfCars;i++){
+    		newCar=new ArrayList<Car>();
+    		allCars.add(new Car());
     	}
     	
-    	newCar[0].setCurrentLane(laneNumber);
+    	newCar.get(0).setCurrentLane(laneNumber);
     	
     	RoadSegment currentSegment=newMap.getRoadSegmentFromRoadName(roadName,laneNumber); 
     	     /*Finding Current segment for a Car*/
-    	newCar[0].setCurrentSegment(currentSegment);
+    	newCar.get(0).setCurrentSegment(currentSegment);
     	
     	String roadOrientation=newMap.getRoadOrientation(roadName,laneNumber); 
     	     /*Getting Road orientation for Road selected by user to put his car*/
@@ -75,18 +75,18 @@ public class Scenario {
 			return;
 		}
 		
-		String carDirection=newCar[0].getCarDirection(roadOrientation,laneNumber);  
+		String carDirection=newCar.get(0).getCarDirection(roadOrientation,laneNumber);  
 			/*Calculation direction of a car.*/
 		if(carDirection==null){
 			System.out.println("Wrong Direction.");
 			return;
 		}
-		newCar[0].setDirection(carDirection);
-		newCar[0].setCarInitialPosition(currentSegment,laneNumber,carDirection);
+		newCar.get(0).setDirection(carDirection);
+		newCar.get(0).setCarInitialPosition(currentSegment,laneNumber,carDirection);
 		//newCar.setCarPosition(4.0,2.0);
     	
 		/******** Initialization Done **********/
-		newCar[0].getCarStatus();
+		newCar.get(0).getCarStatus();
     }
     
     public void startScenario(){
@@ -104,8 +104,8 @@ public class Scenario {
     		if(input.equals("accelerate")){
     			//System.out.println("Action : Accelerate");
     			this.action="accelerate";
-    			if(continueScenario(newCar[0].accelerate())){
-    				newCar[0].getCarStatus();
+    			if(continueScenario(newCar.get(0).accelerate())){
+    				newCar.get(0).getCarStatus();
     			}
     			else{
     				reward=false;
@@ -117,8 +117,8 @@ public class Scenario {
     		else if(input.equals("brake")){
     			//System.out.println("Action : brake");
     			this.action="brake";
-    			if(continueScenario(newCar[0].brake())){
-    				newCar[0].getCarStatus();
+    			if(continueScenario(newCar.get(0).brake())){
+    				newCar.get(0).getCarStatus();
     			}
     			else{
     				reward=false;
@@ -129,8 +129,8 @@ public class Scenario {
     		else if(input.equals("doNothing")){
     			//System.out.println("Action : doNothing");
     			this.action="doNothing";
-    			if(continueScenario(newCar[0].doNothing())){
-    				newCar[0].getCarStatus();
+    			if(continueScenario(newCar.get(0).doNothing())){
+    				newCar.get(0).getCarStatus();
     			}
     			else{
     				reward=false;
@@ -141,8 +141,8 @@ public class Scenario {
     		else if(input.equals("moveRightLane")){
     			//System.out.println("Action : moveRightLane");
     			this.action="moveRightLane";
-    			if(continueScenario(newCar[0].moveRightLane())){
-    				newCar[0].getCarStatus();
+    			if(continueScenario(newCar.get(0).moveRightLane())){
+    				newCar.get(0).getCarStatus();
     			}
     			else{
     				reward=false;
@@ -153,8 +153,8 @@ public class Scenario {
     		else if(input.equals("moveLeftLane")){
     			this.action="moveLeftLane";
     			//System.out.println("Action : moveLeftLane");
-    			if(continueScenario(newCar[0].moveLeftLane())){
-    				newCar[0].getCarStatus();
+    			if(continueScenario(newCar.get(0).moveLeftLane())){
+    				newCar.get(0).getCarStatus();
     			}
     			else{
     				reward=false;
@@ -184,12 +184,43 @@ public class Scenario {
 
     void firstOrderLogic(){
     	System.out.println("Episode : "+id);
-    	String predlist=new String();
-    	for(int i=0;i<newCar.length;i++){
-    		if(newCar[i].)
+    	String predList=new String();
+    	for(Car car:newCar){
+    		predList+="LOCATED_AT_TIME("+this.id+this.time+car.getDirection()+car.getCarCoordinates().getX()+
+					car.getCarCoordinates().getY()+car.getColor()+car.getType()+car.getCurrSpeed()+
+					car.getRateOfAccl()+")\n";
+    		if(car.isControlled()){
+    			predList+="TOOK_ACTION("+this.id+this.time+this.action+")\n";
+    			predList+="GOT_REWARD("+this.id+this.time+this.action+getReward()+")\n";
+    			for(Car anotherCar:newCar){
+    				if(car!=anotherCar&&car.getCurrentLane()==anotherCar.getCurrentLane()
+    						&&car.getDirection()==anotherCar.getDirection()){
+    					if(car.getDirection()=="east"){
+    						if(car.getCarCoordinates().getY()>anotherCar.getCarCoordinates().getY()){
+    							predList+="IN_FRONT("+this.id+this.time+car.getDirection()+car.getCarCoordinates().getX()+
+    	    							   car.getCarCoordinates().getY()+car.getColor()+car.getType()+car.getCurrSpeed()+
+    	    							   car.getRateOfAccl()+")\n";
+    						}
+    						else{
+    							predList+="IN_BACK("+this.id+this.time+car.getDirection()+car.getCarCoordinates().getX()+
+    	    							   car.getCarCoordinates().getY()+car.getColor()+car.getType()+car.getCurrSpeed()+
+    	    							   car.getRateOfAccl()+")\n";
+    						}
+    						
+    					}
+    					
+    					
+    				}
+    	    			
+    			}
+    			
+    		}
     	}
 	}
     
+    double getDistanceBetween(double x1,double y1,double x2,double y2){
+    	return(Math.sqrt((Math.pow((x2-x1),2)+Math.sqrt(Math.pow((y2-y1),2)))));
+    }
     double getReward(){
     	if(this.reward) return this.positiveReward;
     	return this.negativeReward;
