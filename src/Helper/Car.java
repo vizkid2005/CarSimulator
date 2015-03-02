@@ -25,7 +25,7 @@ public class Car {
     private boolean isLooping; //To be set if the car is to keep looping on the same road
 
     //Crucial variable, simulates movement of car.
-    private double currentDist;
+    private double currentDist=0.0;
     private double prevDist=0.0;
 	//Instead of the x y coordinate, we point to the roadsegment it is currently in
 	private double xCoordinate;
@@ -33,7 +33,6 @@ public class Car {
     private RoadSegment currentSegment;
     private RoadSegment nextSegment;
 	private String direction; //North, South, East, West
-	private String currentAction; //Not needed
 	//RoadMap newMap=new RoadMap();          This should be in the Scenario
 
     public Car(){
@@ -69,7 +68,12 @@ public class Car {
         this.setMaxSpeed(maxSpeed);
         this.setCurrentLane(currentLane);
         this.currentSegment = map.getRoadSegmentFromRoadName(initialRoad,currentLane);
-        this,
+        this.setIsControlled(isControlled);
+        this.setLooping(isLooping);
+        this.getNextSegment();
+        this.getCarDirection(map.getRoadOrientation(initialRoad,currentLane),currentLane);
+        this.setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+
     }
 	
 	/*********************** Setters *********************/

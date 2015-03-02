@@ -1,39 +1,57 @@
 package Initializers;
 import java.io.*;
 import java.util.ArrayList;
+
+import BigMap.RoadMap;
 import Helper.Car;
+/*
+This class cannot be used unless a RoadMap is Initialized
 
+ */
 public class ReadCarInput {
-    ArrayList<Car> carList=new ArrayList<Car>();
+    ArrayList<Car> carList = new ArrayList<Car>();
 
-    public  ArrayList<Car> readCarInput(String fileName){
-        String line=null;
-        try{
-            FileReader reader=new FileReader(fileName);
-            BufferedReader buf=new BufferedReader(reader);
+    public ArrayList<Car> readCarInput(RoadMap map, String fileName) {
+        String line = null;
+        try {
+            FileReader reader = new FileReader(fileName);
+            BufferedReader buf = new BufferedReader(reader);
 
-            while((line=buf.readLine())!=null){
-                if(line.contains("#")){
+            while ((line = buf.readLine()) != null) {
+                if (line.contains("#")) {
                     continue;
                 }
-                String[] result=line.split(",");
-                x1=Integer.parseInt(result[0]);
-                y1=Integer.parseInt(result[1]);
-                x2=Integer.parseInt(result[2]);
-                y2=Integer.parseInt(result[3]);
-                roadName=result[4];
-                Road newRoad= new Road(startGrid,endGrid,roadName);
-                gridList.add(newRoad);
+                String[] result = line.split(",");
+                String color = result[0];
+                String type = result[1];
+                double currSpeed = Double.parseDouble(result[2]);
+                double rateOfAccl = Double.parseDouble(result[3]);
+                double rateOfBraking = Double.parseDouble(result[4]);
+                double maxSpeed = Double.parseDouble(result[5]);
+                int intialLane = Integer.parseInt(result[6]);
+                String intialRoad = result[7];
+                boolean isLooping = Boolean.parseBoolean(result[8]);
+                boolean isControlled = Boolean.parseBoolean(result[9]);
+                Car newCar = new Car(map, color, type,
+                        currSpeed, rateOfAccl,
+                        rateOfBraking, maxSpeed,
+                        intialLane, intialRoad,
+                        isLooping, isControlled);
+                carList.add(newCar);
             }
-        }
-
-        catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("File Not Found !!!");
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             System.out.println("Error in reading file : ");
             e.printStackTrace();
         }
 
-        return gridList;
+        for(int i =0;i<carList.size();i++){
+            System.out.println();
+            System.out.println(carList.get(i).);
+        }
 
+        return carList;
+
+    }
+}
