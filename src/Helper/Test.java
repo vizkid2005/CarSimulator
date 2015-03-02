@@ -1,5 +1,6 @@
 package Helper;
 
+//Should be removed
 public class Test {
 
 	public static void main(String args[]){
@@ -17,13 +18,13 @@ public class Test {
 		newCar.getCarStatus();
 		
 		//newCar.moveLeft();
-		newCar.getCarCoordinate();
+		newCar.getCarCoordinates();
 		//newCar.moveRight();
-		newCar.getCarCoordinate();
+		newCar.getCarCoordinates();
 		//newCar.moveStraight();
-		newCar.getCarCoordinate();
+		newCar.getCarCoordinates();
 		//newCar.stop();
-		newCar.getCarCoordinate();
+		newCar.getCarCoordinates();
 		
 		newCar.getCarStatus();
 	}

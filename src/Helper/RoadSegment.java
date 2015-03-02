@@ -14,9 +14,8 @@ public class RoadSegment {
     RoadSegment westSegment;
     GridPoint pointInGrid;
     boolean isIntersection; //A car can change direction only if it is at an intersection
-    int width; //Will be removed
-    int height; // Will be removed
-    int length; // Arbitrary length - Do not forget to intialize before running
+    //1 mile = 5280 ft
+    public static final int length = 1; // Arbitrary length in feet, miles , etc. - Do not forget to intialize before running
 
     //Boilerplate constructor, the real work will be done by the get and set methods
     public RoadSegment(GridPoint gp, boolean isIntersection){
@@ -26,10 +25,6 @@ public class RoadSegment {
         westSegment = null;
         pointInGrid = gp;
         this.isIntersection = isIntersection;
-        //Each lane is 12 feet wide and each road as 6 lanes, hence width of 72. Source: Google
-        width = 72;
-        //Height is same as width to make the grid block square.
-        height = 72;
     }
 
     public RoadSegment getNorthSegment() {
@@ -66,7 +61,6 @@ public class RoadSegment {
     public void setPointInGrid(GridPoint pointInGrid) {
         this.pointInGrid = pointInGrid;
     }
-
     public boolean isIntersection() {
         return isIntersection;
     }
@@ -74,18 +68,6 @@ public class RoadSegment {
         this.isIntersection = isIntersection;
     }
 
-    public int getWidth() {
-        return width;
-    }
-    public void setWidth(int width) {
-        this.width = width;
-    }
 
-    public int getHeight() {
-        return height;
-    }
-    public void setHeight(int height) {
-        this.height = height;
-    }
 }
 

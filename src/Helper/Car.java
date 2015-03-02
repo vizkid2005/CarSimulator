@@ -45,7 +45,7 @@ public class Car {
 		color="RED";
 		currSpeed=0.0;
 		maxSpeed=100; //mph
-		rateOfAccl=100.0;//
+		rateOfAccl=200.0;//
 		rateOfBraking=5.0;
 		currentDist=0.0;
 		xCoordinate=-1.0;
@@ -62,7 +62,6 @@ public class Car {
 	public void xCoordinate(double x){
 		this.xCoordinate=x;
 	}
-	
 	public void yCoordinate(double y){
 		this.yCoordinate=y;
 	}
@@ -115,14 +114,24 @@ public class Car {
 	public boolean setCarInitialPosition(RoadSegment Segment,int laneNumber,String carDirection){
 		double segmentXCoordinate=Segment.getPointInGrid().getX();
 		double segmentYCoordinate=Segment.getPointInGrid().getY();
-		if(carDirection=="north"||carDirection=="south"){
+		if(carDirection=="north"){
+			this.yCoordinate=segmentYCoordinate+((laneNumber-1)*0.1667);  // 1/6 =0.1667
+			this.xCoordinate=segmentXCoordinate+1;
+			return true;
+		}
+		else if(carDirection=="south"){
 			this.yCoordinate=segmentYCoordinate+((laneNumber-1)*0.1667);  // 1/6 =0.1667
 			this.xCoordinate=segmentXCoordinate;
 			return true;
 		}
-		else if(carDirection=="east"||carDirection=="west"){
+		else if(carDirection=="east"){
 			this.xCoordinate=segmentXCoordinate+((6-laneNumber)*0.1667);  // 1/6 =0.1667
-			this.yCoordinate=Segment.getPointInGrid().getY();
+			this.yCoordinate=segmentYCoordinate;
+			return true;
+		}
+		else if(carDirection=="west"){
+			this.xCoordinate=segmentXCoordinate+((6-laneNumber)*0.1667);  // 1/6 =0.1667
+			this.yCoordinate=segmentYCoordinate+1;
 			return true;
 		}
 	return false;
@@ -135,11 +144,14 @@ public class Car {
 		return this.currentLane;
 	}
 	
-	public void getCarCoordinate(){
+	public Coordinates getCarCoordinates(){
+
+        Coordinates c = new Coordinates(xCoordinate, yCoordinate);
 		System.out.println("***************** Car Co-ordinate Status *******************");
 		System.out.println("xCoordinate : "+xCoordinate) ;
 		System.out.println("yCoordinate : "+yCoordinate) ;
-	}
+        return c;
+    }
 	
 	public void getCurrentSpeed(){
 		System.out.println("************** Car Current Speed *******************");
@@ -188,13 +200,16 @@ public class Car {
 		
 		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
 			// S=ut+0.5at^2 Equation of Motion
-        this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-	        
-        if(this.prevDist>=1){                      // End of Segment
-	        	this.prevDist=0.0;
-	        	this.currentSegment=getNextSegment();
+        //this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+		this.prevDist=((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));    
+        
+		if(this.currentDist>=1){                      // End of Segment
+	        	//this.prevDist=0.0;
+				this.currentDist=0.0;
+				this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
 	        		reward=false;
+	        		return reward;
 	        	}
 	        	else{
 	        		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
@@ -225,12 +240,14 @@ public class Car {
 		}
 		else{
 	        this.currentDist = this.currentDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0))); // s = ut - 1/2 at^2
-	        this.prevDist=this.prevDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-	        if(this.prevDist>=1){                      // End of Segment
-	        	this.prevDist=0.0;
+	        //this.prevDist=this.prevDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	        this.prevDist=((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	        if(this.currentDist>=1){                      // End of Segment
+	        	this.currentDist=0.0;
 	        	this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
 	        		reward=false;
+	        		return reward;
 	        	}
 	        	else{
 	        		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
@@ -254,13 +271,14 @@ public class Car {
 	public boolean doNothing(){
 		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
 		// S=ut+0.5at^2 Equation of Motion
-	    this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-	        
-	    if(this.prevDist>=1){                      // End of Segment
-	        	this.prevDist=0.0;
+	    //this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+		  this.prevDist=((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));    
+	    if(this.currentDist>=1){                      // End of Segment
+	    	this.currentDist=0.0;
 	        	this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
 	        		reward=false;
+	        		return reward;
 	        	}
 	        	else{
 	        		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
@@ -290,11 +308,15 @@ public class Car {
 		System.out.println("***** Move Right Lane ******");
 		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
 			// S=ut+0.5at^2 Equation of Motion
-	    this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-	    
-	    if(this.prevDist>=1){                      // End of Segment
-        	this.prevDist=0.0;
+	    //this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+		this.prevDist=((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	    if(this.currentDist>=1){                      // End of Segment
+	    	this.currentDist=0.0;
+        	String prevDirection=this.direction;
         	this.currentSegment=getNextSegment();
+        	if(this.direction.equals(prevDirection)){
+        		return(getRightMovePosition());
+        	}
         	if(this.currentSegment==null){
         		reward=false;
         		return reward;
@@ -302,11 +324,19 @@ public class Car {
         	else{
         		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
         		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+        		reward=true;
+        		return reward;
         	}
         }
 	    
 	    /************ Calculate the possible next lane ***********************/
-	    
+	    else{
+	    	return(getRightMovePosition());
+	    }
+	}
+	
+	boolean getRightMovePosition(){
+
 	    if(this.direction=="east"){
 	    	if(this.currentLane==3||this.currentLane==2) {
 	    		this.currentLane-=1;
@@ -326,6 +356,7 @@ public class Car {
 //	        		reward=true;
 //	    		}
 	    		reward=false;
+	    		return reward;
 	    	}
 	    }
 	    else if(this.direction=="west"){
@@ -347,6 +378,7 @@ public class Car {
 //	        		reward=true;
 //	    		}
 	    		reward=false;
+	    		return reward;
 	    	}
 	    } 
 	    else if(this.direction=="south"){
@@ -368,6 +400,7 @@ public class Car {
 //	        		reward=true;
 //	    		}
 	    		reward=false;
+	    		return reward;
 	    	}
 	    }
 	    else if(this.direction=="north"){
@@ -389,9 +422,11 @@ public class Car {
 //	        		reward=true;
 //	    		}
 	    		reward=false;
+	    		return reward;
 	    	}
 	    }
 	    return reward;
+	   
 	}
 	
 	/*
@@ -408,11 +443,15 @@ public class Car {
 		System.out.println("***** Move Left Lane ******");
 		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
 			// S=ut+0.5at^2 Equation of Motion
-	    this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-	    
-	    if(this.prevDist>=1){                      // End of Segment
-        	this.prevDist=0.0;
+	    //this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+		this.prevDist=((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	    if(this.currentDist>=1){                      // End of Segment
+	    	this.currentDist=0.0;
+        	String prevDirection=this.direction;
         	this.currentSegment=getNextSegment();
+        	if(this.direction.equals(prevDirection)){
+        		return(getLeftMovePosition());
+        	}
         	if(this.currentSegment==null){
         		reward=false;
         		return reward;
@@ -420,12 +459,20 @@ public class Car {
         	else{
         		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
         		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+        		reward=true;
+        		return reward;
         	}
         }
 	    
 	    /************ Calculate the possible next lane ***********************/
+	    else{
+	    	return(getLeftMovePosition());
+	    }
 	    
-	    if(this.direction=="east"){
+	}	
+	
+	boolean getLeftMovePosition(){
+		if(this.direction=="east"){
 	    	if(this.currentLane==1||this.currentLane==2) {
 	    		this.currentLane+=1;
 	    		calculateNewCoordinates();                /* Get New Y Coordinate */
@@ -444,6 +491,7 @@ public class Car {
 //	        		reward=true;
 //	    		}
 	    		reward=false;
+	    		return reward;
 	    	}
 	    }
 	    else if(this.direction=="west"){
@@ -465,6 +513,7 @@ public class Car {
 //	        		reward=true;
 //	    		}
 	    		reward=false;
+	    		return reward;
 	    	}
 	    } 
 	    else if(this.direction=="south"){
@@ -486,6 +535,7 @@ public class Car {
 //	        		reward=true;
 //	    		}
 	    		reward=false;
+	    		return reward;
 	    	}
 	    }
 	    else if(this.direction=="north"){
@@ -507,10 +557,11 @@ public class Car {
 //	        		reward=true;
 //	    		}
 	    		reward=false;
+	    		return reward;
 	    	}
 	    }
 	    return reward;
-	}	
+	}
 	
 	
 	/*
@@ -524,104 +575,127 @@ public class Car {
 	public RoadSegment getNextSegment(){
 		RoadSegment nextSegment;
 		if(this.direction=="east"){
-			if(this.currentSegment.isIntersection){
-				if(this.currentLane==1){
-					nextSegment=this.currentSegment.southSegment;
-					this.currentLane=1;
-					this.direction=getCarDirection("NS", this.currentLane);
-				}
-				else if(this.currentLane==3){
-					nextSegment=this.currentSegment.northSegment;
-					this.currentLane=4;
-					this.direction=getCarDirection("NS", this.currentLane);
-				}
-				else if(this.currentLane==2){
-					nextSegment=this.currentSegment.eastSegment;
-					this.currentLane=2;
-					this.direction=getCarDirection("EW", this.currentLane);
+			if(this.currentSegment.eastSegment!=null){
+				if(this.currentSegment.eastSegment.isIntersection){
+					if(this.currentLane==1){
+						nextSegment=this.currentSegment.eastSegment.southSegment;
+						this.currentLane=1;
+						this.direction=getCarDirection("NS", this.currentLane);
+					}
+					else if(this.currentLane==3){
+						nextSegment=this.currentSegment.eastSegment.northSegment;
+						this.currentLane=4;
+						this.direction=getCarDirection("NS", this.currentLane);
+					}
+					else if(this.currentLane==2){
+						nextSegment=this.currentSegment.eastSegment;
+						this.currentLane=2;
+						this.direction=getCarDirection("EW", this.currentLane);
+					}
+					else{
+						nextSegment= null;
+					}
 				}
 				else{
-					nextSegment= null;
+					nextSegment=this.currentSegment.eastSegment;
 				}
-			}
+			 }
 		  else{
-			  nextSegment=this.currentSegment.eastSegment;
-		   }
+				return null;
+			}
 		}
 	  else if(this.direction=="west"){
-		  if(this.currentSegment.isIntersection){
-				if(this.currentLane==6){
-					nextSegment=this.currentSegment.northSegment;
-					this.currentLane=6;
-					this.direction=getCarDirection("NS", this.currentLane);
+		  if(this.currentSegment.westSegment!=null){
+			  if(this.currentSegment.westSegment.isIntersection){
+					if(this.currentLane==6){
+						nextSegment=this.currentSegment.westSegment.northSegment;
+						this.currentLane=6;
+						this.direction=getCarDirection("NS", this.currentLane);
+					}
+					else if(this.currentLane==4){
+						nextSegment=this.currentSegment.westSegment.southSegment;
+						this.currentLane=3;
+						this.direction=getCarDirection("NS", this.currentLane);
+					}
+					else if(this.currentLane==5){
+						nextSegment=this.currentSegment.westSegment;
+						this.currentLane=5;
+						this.direction=getCarDirection("EW", this.currentLane);
+					}
+					else{
+						nextSegment= null;
+					}
 				}
-				else if(this.currentLane==4){
-					nextSegment=this.currentSegment.southSegment;
-					this.currentLane=3;
-					this.direction=getCarDirection("NS", this.currentLane);
-				}
-				else if(this.currentLane==5){
-					nextSegment=this.currentSegment.westSegment;
-					this.currentLane=5;
-					this.direction=getCarDirection("EW", this.currentLane);
-				}
-				else{
-					nextSegment= null;
-				}
-			}
+			  else{
+				  nextSegment=this.currentSegment.westSegment;
+			   }
+		  }
 		  else{
-			  nextSegment=this.currentSegment.westSegment;
-		   }
+			  return null;
+		  }
+		  
 	  } 
 	 else if(this.direction=="north"){
-		 if(this.currentSegment.isIntersection){
-				if(this.currentLane==6){
-					nextSegment=this.currentSegment.eastSegment;
-					this.currentLane=1;
-					this.direction=getCarDirection("EW", this.currentLane);
+		 if(this.currentSegment.northSegment!=null){
+			 if(this.currentSegment.northSegment.isIntersection){
+					if(this.currentLane==6){
+						nextSegment=this.currentSegment.northSegment.eastSegment;
+						this.currentLane=1;
+						this.direction=getCarDirection("EW", this.currentLane);
+					}
+					else if(this.currentLane==4){
+						nextSegment=this.currentSegment.northSegment.westSegment;
+						this.currentLane=4;
+						this.direction=getCarDirection("EW", this.currentLane);
+					}
+					else if(this.currentLane==5){
+						nextSegment=this.currentSegment.northSegment;
+						this.currentLane=5;
+						this.direction=getCarDirection("NS", this.currentLane);
+					}
+					else{
+						nextSegment= null;
+					}
 				}
-				else if(this.currentLane==4){
-					nextSegment=this.currentSegment.westSegment;
-					this.currentLane=4;
-					this.direction=getCarDirection("EW", this.currentLane);
-				}
-				else if(this.currentLane==5){
-					nextSegment=this.currentSegment.northSegment;
-					this.currentLane=5;
-					this.direction=getCarDirection("NS", this.currentLane);
-				}
-				else{
-					nextSegment= null;
-				}
-			}
-		  else{
-			  nextSegment=this.currentSegment.northSegment;
-		   } 
+			  else{
+				  nextSegment=this.currentSegment.northSegment;
+			   }
+		 }
+		else{
+			return null;
+		}
+		  
 	  }
 	  else if(this.direction=="south"){
-		  if(this.currentSegment.isIntersection){
-				if(this.currentLane==1){
-					nextSegment=this.currentSegment.westSegment;
-					this.currentLane=6;
-					this.direction=getCarDirection("EW", this.currentLane);
+		  if(this.currentSegment.southSegment!=null){
+			  if(this.currentSegment.southSegment.isIntersection){
+					if(this.currentLane==1){
+						nextSegment=this.currentSegment.southSegment.westSegment;
+						this.currentLane=6;
+						this.direction=getCarDirection("EW", this.currentLane);
+					}
+					else if(this.currentLane==3){
+						nextSegment=this.currentSegment.southSegment.eastSegment;
+						this.currentLane=3;
+						this.direction=getCarDirection("EW", this.currentLane);
+					}
+					else if(this.currentLane==2){
+						nextSegment=this.currentSegment.southSegment;
+						this.currentLane=2;
+						this.direction=getCarDirection("NS", this.currentLane);
+					}
+					else{
+						nextSegment= null;
+					}
 				}
-				else if(this.currentLane==3){
-					nextSegment=this.currentSegment.eastSegment;
-					this.currentLane=3;
-					this.direction=getCarDirection("EW", this.currentLane);
-				}
-				else if(this.currentLane==2){
-					nextSegment=this.currentSegment.southSegment;
-					this.currentLane=2;
-					this.direction=getCarDirection("NS", this.currentLane);
-				}
-				else{
-					nextSegment= null;
-				}
-			}
+			  else{
+				  nextSegment=this.currentSegment.southSegment;
+			   }
+		  }
 		  else{
-			  nextSegment=this.currentSegment.southSegment;
-		   }	
+			  return null;
+		  }
+		  	
 		}
 	 else{
 		 nextSegment= null;
@@ -643,24 +717,26 @@ public class Car {
 		double currentSegStartX=this.currentSegment.getPointInGrid().getX();
 		
 		if(this.direction=="west"){
-	    	yCoordinate=currentSegStartY - this.prevDist;
+			yCoordinate=yCoordinate - this.prevDist;
+	    	//yCoordinate=currentSegStartY - this.prevDist;
 	    	//yCoordinate=Double.parseDouble(df.format(yCoordinate));
 	    }
 	    
 	    if(this.direction=="east"){
 	    	//yCoordinate=this.getCurrentSegment().getPointInGrid().getY() + this.prevDist;
-	    	yCoordinate=currentSegStartY + this.prevDist;
+	    	//yCoordinate=currentSegStartY + this.prevDist;
+	    	yCoordinate=yCoordinate + this.prevDist;
 	    	 
 	    }
 	    
 	    if(this.direction=="south"){
-	    	xCoordinate=currentSegStartX + this.prevDist;
-	    	 
+	    	//xCoordinate=currentSegStartX + this.prevDist;
+	    	xCoordinate=xCoordinate + this.prevDist;
 	    }
 	    
 	    if(this.direction=="north"){
-	    	xCoordinate=currentSegStartX - this.prevDist;
-	    	 
+	    	//xCoordinate=currentSegStartX - this.prevDist;
+	    	xCoordinate=xCoordinate - this.prevDist;
 	    }
     }
 	

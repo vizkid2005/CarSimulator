@@ -5,6 +5,7 @@ import Helper.Road;
 import Helper.RoadSegment;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * This class takes in an ArrayList of Road object and generates a map of RoadSegments.
@@ -17,20 +18,22 @@ public class RoadMap {
     ArrayList<RoadSegment> RoadStartPointers; //Keep track of all starting points of the roads
     ArrayList<RoadSegment> RoadEndPointers; //Keep track of all ending points of the roads
     ArrayList<RoadSegment> IntersectionPointers; //Keep track of all intersection points
-    ArrayList<Road> listOfRoads; //Maintian a local copy of the roads
+    ArrayList<RoadSegment> AllRoadSegmentPointers; //Keep pointers for each and every road segment
+    ArrayList<Road> listOfRoads; //Maintain a local copy of the roads
 
     //The constructor is responsible for building everything.
     public RoadMap(ArrayList<Road> roads){
+        //The constructor calls all the necessary methods to initialize the Road datastructure.
+        //The order of method calls is crucial. Do not change
         listOfRoads = roads;
+        AllRoadSegmentPointers = new ArrayList<RoadSegment>();
         ArrayList<RoadSegment> allvisited = new ArrayList<RoadSegment>(); //Just for debugging, remove when not needed
         checkDuplicates(roads); //Check for duplicates first, System exits if any duplicates are found.
         getIntersectionPoints(roads); //Calculate intersection points of all roads.
-        printIntersectionPoints(roads); //Debug method to check if all roads have appropriate intersection points
+        //printIntersectionPoints(roads); //Debug method to check if all roads have appropriate intersection points
         buildRoadMap(roads); //The core method where all the magic happens
-        //printRoads(); // Print roads as a linked list
         System.out.println();
         recursivePrint(RoadStartPointers.get(0),2,allvisited); //Inorder printing of the roads
-       // testIntersections();
     }
 
     public RoadSegment getNextSegment(RoadSegment currSegment,String action ){
@@ -299,29 +302,13 @@ public class RoadMap {
         }
         return null;
     }
-    /*public void testIntersections(){
-        for(int j = 0;j<IntersectionPointers.size();j++){
-
-            try {
-                RoadSegment temp = IntersectionPointers.get(j);
-                System.out.println("For section " + temp.getPointInGrid().getX() + " - " + temp.getPointInGrid().getY() + " : ");
-                System.out.println("North Segment = " + temp.getNorthSegment().getPointInGrid().getX() + " - " + temp.getNorthSegment().getPointInGrid().getY());
-                System.out.println("South Segment = " + temp.getSouthSegment().getPointInGrid().getX() + " - " + temp.getSouthSegment().getPointInGrid().getY());
-                System.out.println("East Segment = " + temp.getEastSegment().getPointInGrid().getX() + " - " + temp.getEastSegment().getPointInGrid().getY());
-                System.out.println("West Segment = " + temp.getWestSegment().getPointInGrid().getX() + " - " + temp.getWestSegment().getPointInGrid().getY());
-                System.out.println();
-            }
-            catch(Exception e){}
-        }
-    }*/
-
     public void recursivePrint(RoadSegment startPoint, int direction, ArrayList<RoadSegment> allvisited) {
-
         if (startPoint == null || allvisited.contains(startPoint)) {
             return;
         }
         allvisited.add(startPoint);
-        System.out.println("X -> " + startPoint.getPointInGrid().getX() + "  Y -> " + startPoint.getPointInGrid().getY());
+        AllRoadSegmentPointers.add(startPoint);
+        System.out.print("X: " + startPoint.getPointInGrid().getX() + " Y: " + startPoint.getPointInGrid().getY()+" -> ");
         if (direction == 1) {
             recursivePrint(startPoint.getNorthSegment(), 1, allvisited);
             recursivePrint(startPoint.getEastSegment(), 2, allvisited);
@@ -341,7 +328,6 @@ public class RoadMap {
             recursivePrint(startPoint.getWestSegment(), 4, allvisited);
         }
     }
-
     public String getRoadOrientation(String roadName,int laneNumber){
     	
     	for(int i=0;i<listOfRoads.size();i++){
@@ -351,7 +337,6 @@ public class RoadMap {
         }
     	return null;
     }
-    
     public RoadSegment getRoadSegmentFromRoadName(String roadName, int laneNumber){
         GridPoint beginPoint = null;
         GridPoint endPoint = null;
@@ -384,7 +369,24 @@ public class RoadMap {
         }
         return null;
     }
-    
+    //Method to retrieve RoadSegment from Coordinate
+    public RoadSegment getRoadSegmentFromXY(double x, double y){
+        int localX = (int) x/RoadSegment.length;
+        int localY = (int) y/RoadSegment.length;
+
+        //Using Iterator instead of for loop
+        Iterator<RoadSegment> iter = AllRoadSegmentPointers.iterator();
+        while(iter.hasNext()){
+            RoadSegment rs = iter.next();
+            int checkX = rs.getPointInGrid().getX();
+            int checkY = rs.getPointInGrid().getY();
+            //Return null if the desired RoadSegment is an intersection
+            if(checkX == x && checkY == y && rs.isIntersection() == false){
+                return rs;
+            }
+        }
+        return null;
+    }
 }
 
 

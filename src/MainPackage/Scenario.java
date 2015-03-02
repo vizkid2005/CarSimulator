@@ -9,7 +9,9 @@ import Initializers.ReadRoadInput;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * This will be the object that will emulate time, distance and make everything work.
@@ -48,11 +50,12 @@ public class Scenario {
     	
     	ArrayList<Road> roadList=r1.readRoadInput(fileName);    // and generating Road from it.
     	newMap=new RoadMap(roadList);
-    	
+
+        //Even if using single car, try putting it in an ArrayList
+        ArrayList<Car> allCars = new ArrayList<Car>();
     	/********* Creating a Car that can be controlled by user as per custom choice ************/
-    	
     	newCar=new Car();
-    	
+    	allCars.add(newCar);
     	newCar.setCurrentLane(laneNumber);
     	
     	RoadSegment currentSegment=newMap.getRoadSegmentFromRoadName(roadName,laneNumber); 
@@ -162,5 +165,46 @@ public class Scenario {
     	return this.reward&reward;
     }
     
+
+		
+//		i=0;
+//		while(i++!=10){
+//			if(!newCar.brake()){
+//				System.out.println(" *** Negative Reward at iteration : "+i);
+//				break;
+//			}
+//			newCar.getCarStatus();
+//		}
+  
+
+    public boolean isCollision(ArrayList<Car> allCars){
+        //We check the distance between every 2 cars say Car I and Car J
+        Iterator<Car> carIter1 = allCars.iterator();
+        while(carIter1.hasNext()){
+            Car carI = carIter1.next();
+            Iterator<Car> carIter2 = allCars.iterator();
+            while(carIter2.hasNext()){
+                Car carJ = carIter2.next();
+
+                if(carI == carJ){
+                    continue;
+                }
+
+                double carIX = carI.getCarCoordinates().getX();
+                double carIY = carI.getCarCoordinates().getY();
+                double carJX = carJ.getCarCoordinates().getX();
+                double carJY = carJ.getCarCoordinates().getY();
+
+                if(carIX > carJX - 5 && carIX < carJX + 5){
+
+                }
+                else{
+                    //Check for y bounds
+                }
+            }
+        }
+        return false;
+    }
+
     //How will time be managed ?
 }
