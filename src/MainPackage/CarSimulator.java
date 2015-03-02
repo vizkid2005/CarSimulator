@@ -30,6 +30,7 @@ public class CarSimulator {
         carList = rci.readCarInput(map, carFile);
         Scenario s = new Scenario();
 
+
     }
 	
 	

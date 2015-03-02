@@ -17,6 +17,11 @@ public class ReadRoadInput {
 				BufferedReader buf=new BufferedReader(reader);
 				
 				while((line=buf.readLine())!=null){
+
+                    if(line.contains("#")){
+                        continue;
+                    }
+
 					String[] result=line.split(",");
 					x1=Integer.parseInt(result[0]);
 					y1=Integer.parseInt(result[1]);

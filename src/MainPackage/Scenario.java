@@ -51,7 +51,8 @@ public class Scenario {
     public void setPredicatefile(String predicatefile){
     	this.predicatefile=predicatefile;
     }
-    
+
+    public void initializeScenario(RoadMap map, ArrayList<Car> carList, )
     public void initializeScenario(int numberOfCars,String fileName,String roadName,int laneNumber){
     	
     	time=1; // Initializing the time for Episode
