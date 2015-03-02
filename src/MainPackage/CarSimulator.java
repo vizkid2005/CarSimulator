@@ -1,8 +1,12 @@
 package MainPackage;
 
 import BigMap.RoadMap;
+import Helper.Car;
 import Helper.Road;
+
 import java.util.ArrayList;
+
+import Helper.State;
 
 /**
  * Use this class and this class only to run your learner.
@@ -14,11 +18,20 @@ import java.util.ArrayList;
  */
 public class CarSimulator {
 
-    public static void main(String[] args)throws Exception{
-        String roadFile = new String();
+    public Car[] cars=new Car[10];
+	
+	public static void main(String[] args)throws Exception{
+		String roadFile = new String();
         //Just this call should suffice creating the RoadMap, There are a lot of messed up function calls that have to be resolved.
-
+         
         RoadMap map = new RoadMap(roadFile);
+        
+        
 
     }
+    
+    public State getCurrentState(){
+		State currentState = new State(cars);
+		return currentState;
+	}
 }

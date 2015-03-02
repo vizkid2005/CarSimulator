@@ -1,0 +1,12 @@
+car_1(Car which is being controlled) 
+
+LOCATED_AT_TIME(ep1,t1,road1,lane1,direction1,x1,y1,color1,type1,curr_speed1,rate_of_Accl1) 
+TOOK_ACTION(ep1,t1,Action1)
+REACHED_AT(ep1,t1,road1,lane1,direction1,x1,y1,color1,type1,curr_speed1,rate_of_Accl1)
+GOT_REWARD(ep1,t1,reward(boolean))
+IN_FRONT(ep1,t1,road1,lane1,direction1,x2,y2,color2,type2,curr_speed2,rate_of_Accl2)    -- If Any car is there
+DIST_FROM(ep1,t1,dist1)
+IN_BACK(ep1,t1,road1,lane1,direction1,x3,y3,color3,type3,curr_speed3,rate_of_Accl3)    -- If Any car is there
+DIST_FROM(ep1,t1,dist2)
+IN_RIGHT(ep1,t1,road1,lane2,direction1,x4,y4,color4,type4,curr_speed4,rate_of_Accl4)    -- If Any car is there
+IN_LEFT(ep2,t2,road1,lane3,direction1,x5,y5,color5,type5,curr_speed5,rate_of_Accl5)    -- If Any car is there

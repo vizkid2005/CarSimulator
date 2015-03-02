@@ -23,16 +23,9 @@ public class Scenario {
 	RoadMap newMap;						           // Creating RoadMap from Roads generated.
 	Car newCar;                                   // Creating a Car
 	boolean reward=true;
-	int id;           //Uniquely identifies each scenario
-	
-	public Scenario(RoadMap map, ArrayList<Car> allCars, Policy defaultPolicy){
-
-        id = (int) Math.random()*100000; //5 digit random number
-    }
-
-    public Scenario() {
-		// TODO Auto-generated constructor stub
-	}
+	int id;           // Uniquely identifies each scenario
+	int time;         // Time for Episode  
+	//int episode;      // Episode id
 
 	//Gives the status of the entire environment in some form that is understandable
     public void showStatus(){
@@ -52,6 +45,8 @@ public class Scenario {
     //Has to be modified a bit. To get the sequence of operations correct.
     public void initializeScenario(int numberOfCars,String fileName,String roadName,int laneNumber){
     	
+    	time=1; // Initializing the time for Episode
+    	id = (int) Math.random()*100000; //5 digit random number
     	ArrayList<Road> roadList=r1.readRoadInput(fileName);    // and generating Road from it.
     	newMap=new RoadMap(roadList);
         //Even if using single car, try putting it in an ArrayList
@@ -98,7 +93,7 @@ public class Scenario {
     		try{
     		String input=buf.readLine();
     		System.out.println("You decided to take Action : "+input);
-    		
+    		time++;
     		if(input.equals("accelerate")){
     			//System.out.println("Action : Accelerate");
     			if(continueScenario(newCar.accelerate())){
@@ -169,6 +164,9 @@ public class Scenario {
     }
     
 
+    void createPredicateFile(){
+    	
+    }
 		
 //		i=0;
 //		while(i++!=10){
@@ -188,7 +186,7 @@ public class Scenario {
     Default policy
     Status Object
      */
-    public boolean isCollision(ArrayList<Car> allCars){
+/*    public boolean isCollision(ArrayList<Car> allCars){
         //We check the distance between every 2 cars say Car I and Car J
         Iterator<Car> carIter1 = allCars.iterator();
         while(carIter1.hasNext()){
@@ -217,6 +215,6 @@ public class Scenario {
         }
         return false;
     }
-
+*/
     //How will time be managed ?
 }

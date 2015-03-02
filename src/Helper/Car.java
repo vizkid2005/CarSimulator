@@ -713,6 +713,29 @@ public class Car {
 		return nextSegment;
 	}
 
+/************* Not Required **********/	
+//	public boolean existNextSegment(){
+//		boolean isThereNextSegment=false;
+//		RoadSegment nextSegment;
+//		if(this.direction=="east" && 
+//			(this.currentSegment.eastSegment!=null||this.currentSegment.southSegment!=null||this.currentSegment.northSegment!=null)){
+//			isThereNextSegment=true;
+//		}
+//		if(this.direction=="west" && 
+//			(this.currentSegment.westSegment!=null||this.currentSegment.southSegment!=null||this.currentSegment.northSegment!=null)){
+//			isThereNextSegment=true;
+//		}
+//		if(this.direction=="south" && 
+//			(this.currentSegment.southSegment!=null||this.currentSegment.eastSegment!=null||this.currentSegment.westSegment!=null)){
+//			isThereNextSegment=true;
+//		}
+//		if(this.direction=="north" && 
+//			(this.currentSegment.northSegment!=null||this.currentSegment.westSegment!=null||this.currentSegment.eastSegment!=null)){
+//			isThereNextSegment=true;
+//		}
+//	
+//	return isThereNextSegment;	
+//}
 	
 	/*
 	 * calculateNewCoordinates() - Depending upon the direction and current segment, this will
