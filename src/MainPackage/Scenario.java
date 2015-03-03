@@ -29,7 +29,8 @@ public class Scenario {
 	int time;         // Time for Episode  
 	double positiveReward=1.0; // Reward Values for positive Action
 	double negativeReward=0.0; // Reward values for negative Action
-	String predicatefile;
+	String predicatefile; //Contains predicates from various
+    String logfile;
 
 	//Gives the status of the entire environment in some form that is understandable
     public void showStatus(){
@@ -52,7 +53,9 @@ public class Scenario {
     	this.predicatefile=predicatefile;
     }
 
-    public void initializeScenario(RoadMap map, ArrayList<Car> carList, )
+    public void initializeScenario(RoadMap map, ArrayList<Car> carList, String predicateFileName, String logFileName){
+
+    }
     public void initializeScenario(int numberOfCars,String fileName,String roadName,int laneNumber){
     	
     	time=1; // Initializing the time for Episode
