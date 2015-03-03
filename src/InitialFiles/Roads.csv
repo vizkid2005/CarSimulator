@@ -1,5 +1,3 @@
-#xStart(Row),yStart(Column),xEnd(Row),yEnd(Column),RoadName
-#Do not use # in Road names. # is only for comments and #Hashtags ;-)
 2,0,2,6,10th Street
 4,0,4,5,9th Street
 10,5,10,6,Indiana Avenue

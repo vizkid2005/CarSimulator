@@ -33,6 +33,7 @@ public class Car {
     private RoadSegment currentSegment;
     private RoadSegment nextSegment;
 	private String direction; //North, South, East, West
+	private int carId;
 	//RoadMap newMap=new RoadMap();          This should be in the Scenario
 
     public Car(){
@@ -73,10 +74,15 @@ public class Car {
         this.currentSegment = map.getRoadSegmentFromRoadName(initialRoad,currentLane);
         this.getNextSegment();
         this.setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+        this.setCarId((int) Math.round(Math.random()*100000));
 }
 	
 	/*********************** Setters *********************/
 	
+    public void setCarId(int carId){
+    	this.carId=carId;
+    }
+    
 	public void xCoordinate(double x){
 		this.xCoordinate=x;
 	}
@@ -156,6 +162,10 @@ public class Car {
 	}
 	
 	/************************** Getter ************************/
+	
+	public int getCarId(){
+    	return this.carId;
+    }
 	
 	public String getType(){
 		return this.type;

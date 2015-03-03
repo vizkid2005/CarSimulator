@@ -100,6 +100,13 @@ public class Scenario {
 		newCar.get(0).getCarStatus();
     }
     
+    /*
+     * startScenario() : At this stage, this precedure will take input from console.However,
+     * 				     its expected to get input from user in term on file entries.In future,
+     * 					 this function will be called from CarSimulator.java
+     * 
+     * */
+    
     public void startScenario(){
     	int i=0;
     	
@@ -185,13 +192,13 @@ public class Scenario {
     		
     		/******* Adding to First Order Logic ***********/
     		
-    		firstOrderLogic();
+    		predicateLogic();
     		
     		/***********************************************/
     		
     	}while(true);
     	
-    	firstOrderLogic();
+    	predicateLogic();
     }
     
     boolean continueScenario(boolean reward){
@@ -199,91 +206,80 @@ public class Scenario {
     	return this.reward&reward;
     }
     
+    /*
+     * predicateLogic() : It will generate first order logic based on the current state of scenario.
+     * 					  Its expected to call this procedure after execution of each action to record
+     *                    state of scenario.
+     * 
+     * */
 
-    void firstOrderLogic(){
+    void predicateLogic(){
     	System.out.println("Episode : "+id);
     	String predList=new String();
     	for(Car car:newCar){
-    		predList+="LOCATED_AT_TIME("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
-					car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
-					car.getRateOfAccl()+")\n";
+    		predList+="CAR("+this.id+","+car.getCarId()+","+this.time+")\n";
+    		predList+="LOCATION("+this.id+","+car.getCarId()+","+car.getCarCoordinates().getX()+","+
+					        car.getCarCoordinates().getY()+","+this.time+")\n";
+    		predList+="SPEED("+this.id+","+car.getCarId()+","+car.getCurrSpeed()+","+this.time+")\n";
+    		predList+="LANE("+this.id+","+car.getCarId()+","+car.getCurrentLane()+","+this.time+")\n";
+    		predList+="DIRECTION("+this.id+","+car.getCarId()+","+car.getDirection()+","+this.time+")\n";
+    		predList+="COLOR("+this.id+","+car.getCarId()+","+car.getColor()+","+this.time+")\n";
+    		predList+="TYPE("+this.id+","+car.getCarId()+","+car.getType()+","+this.time+")\n";
+    		predList+="RATE_OF_ACCL("+this.id+","+car.getCarId()+","+car.getRateOfAccl()+","+this.time+")\n";
+    		
     		if(car.isControlled()){
-    			predList+="TOOK_ACTION("+this.id+","+this.time+","+this.action+")\n";
-    			predList+="GOT_REWARD("+this.id+","+this.time+","+this.action+","+getReward()+")\n";
+    			predList+="TOOK_ACTION("+this.id+","+car.getCarId()+","+this.action+","+this.time+")\n";
+    			predList+="GOT_REWARD("+this.id+","+car.getCarId()+","+getReward()+","+this.time+")\n";
+    			//"+this.id+","+this.time+","+this.action+","")\n";
     			for(Car anotherCar:newCar){
     				if(car!=anotherCar&&car.getCurrentLane()==anotherCar.getCurrentLane()
     						&&car.getDirection()==anotherCar.getDirection()){
-    					if(car.getDirection()=="east"){
-    						if(car.getCarCoordinates().getY()>anotherCar.getCarCoordinates().getY()){
-    							predList+="IN_FRONT("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
-    	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
-    	    							   car.getRateOfAccl()+")\n";
+    					if((car.getDirection()=="east"&& car.getCarCoordinates().getY()<anotherCar.getCarCoordinates().getY())||
+    					   (car.getDirection()=="west"&&car.getCarCoordinates().getY()>anotherCar.getCarCoordinates().getY())||
+    					   (car.getDirection()=="north"&&car.getCarCoordinates().getX()>anotherCar.getCarCoordinates().getX())||
+    					   (car.getDirection()=="south"&&car.getCarCoordinates().getX()<anotherCar.getCarCoordinates().getX())){
+    							predList+="IN_FRONT("+this.id+","+anotherCar.getCarId()+","+this.time+")\n";
     						}
     						else{
-    							predList+="IN_BACK("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
-  	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
-  	    							   car.getRateOfAccl()+")\n";
+    							predList+="IN_BACK("+this.id+","+anotherCar.getCarId()+","+this.time+")\n";
     						}
-    					  predList+="DIST_FROM("+this.id+","+this.time+","+
-    							      getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
-    							    	anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+")\n";
-    					  
+    						
+    					predList+="LOCATION("+this.id+","+anotherCar.getCarId()+","+anotherCar.getCarCoordinates().getX()+","+
+									    anotherCar.getCarCoordinates().getY()+","+this.time+")\n";
+						predList+="SPEED("+this.id+","+anotherCar.getCarId()+","+anotherCar.getCurrSpeed()+","+this.time+")\n";
+						predList+="LANE("+this.id+","+anotherCar.getCarId()+","+anotherCar.getCurrentLane()+","+this.time+")\n";
+						predList+="DIRECTION("+this.id+","+anotherCar.getCarId()+","+anotherCar.getDirection()+","+this.time+")\n";
+						predList+="COLOR("+this.id+","+anotherCar.getCarId()+","+anotherCar.getColor()+","+this.time+")\n";
+						predList+="TYPE("+this.id+","+anotherCar.getCarId()+","+anotherCar.getType()+","+this.time+")\n";
+						predList+="RATE_OF_ACCL("+this.id+","+anotherCar.getCarId()+","+anotherCar.getRateOfAccl()+","+this.time+")\n";
+    					predList+="DIST_FROM("+this.id+","+getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
+							    	anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+this.time+","+")\n";
     					}
-    					if(car.getDirection()=="west"){
-    						if(car.getCarCoordinates().getY()<anotherCar.getCarCoordinates().getY()){
-    							predList+="IN_FRONT("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
- 	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
- 	    							   car.getRateOfAccl()+")\n";
-    						}
+    				else if(car!=anotherCar&&car.getDirection()==anotherCar.getDirection()){
+    					if((car.getDirection()=="east"&&(car.getCurrentLane()-anotherCar.getCurrentLane())>0)||
+    					   (car.getDirection()=="west"&&(car.getCurrentLane()-anotherCar.getCurrentLane())<0)||
+    					   (car.getDirection()=="south"&&(car.getCurrentLane()-anotherCar.getCurrentLane())>0)||
+    					   (car.getDirection()=="north"&&(car.getCurrentLane()-anotherCar.getCurrentLane())<0)){
+    							predList+="IN_RIGHT("+this.id+","+anotherCar.getCarId()+","+this.time+")\n";
+    					  }
     						else{
-    							predList+="IN_BACK("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
-  	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
-  	    							   car.getRateOfAccl()+")\n";
+    							predList+="IN_LEFT("+this.id+","+anotherCar.getCarId()+","+this.time+")\n";
     						}
-      					  predList+="DIST_FROM("+this.id+","+this.time+","+
-							      getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
-							    	anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+")\n";
-    					  
-    					}
-    					if(car.getDirection()=="north"){
-    						if(car.getCarCoordinates().getX()<anotherCar.getCarCoordinates().getX()){
-    							predList+="IN_FRONT("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
- 	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
- 	    							   car.getRateOfAccl()+")\n";
-    						}
-    						else{
-    							predList+="IN_BACK("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
-  	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
-  	    							   car.getRateOfAccl()+")\n";
-    						}
-      					  predList+="DIST_FROM("+this.id+","+this.time+","+
-							      getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
-							    	anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+")\n";
-    					  
-    					}
-    					if(car.getDirection()=="south"){
-    						if(car.getCarCoordinates().getX()>anotherCar.getCarCoordinates().getX()){
-    							predList+="IN_FRONT("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
- 	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
- 	    							   car.getRateOfAccl()+")\n";
-    						}
-    						else{
-    							predList+="IN_BACK("+this.id+","+this.time+","+car.getCurrentLane()+","+car.getDirection()+","+car.getCarCoordinates().getX()+","+
- 	    							   car.getCarCoordinates().getY()+","+car.getColor()+","+car.getType()+","+car.getCurrSpeed()+","+
- 	    							   car.getRateOfAccl()+")\n";
-    						}
-      					  predList+="DIST_FROM("+this.id+","+this.time+","+
-							      getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
-							    	anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+")\n";
-    					  
+    					predList+="LOCATION("+this.id+","+anotherCar.getCarId()+","+anotherCar.getCarCoordinates().getX()+","+
+							    	anotherCar.getCarCoordinates().getY()+","+this.time+")\n";
+    					predList+="SPEED("+this.id+","+anotherCar.getCarId()+","+anotherCar.getCurrSpeed()+","+this.time+")\n";
+    					predList+="LANE("+this.id+","+anotherCar.getCarId()+","+anotherCar.getCurrentLane()+","+this.time+")\n";
+    					predList+="DIRECTION("+this.id+","+anotherCar.getCarId()+","+anotherCar.getDirection()+","+this.time+")\n";
+    					predList+="COLOR("+this.id+","+anotherCar.getCarId()+","+anotherCar.getColor()+","+this.time+")\n";
+    					predList+="TYPE("+this.id+","+anotherCar.getCarId()+","+anotherCar.getType()+","+this.time+")\n";
+    					predList+="RATE_OF_ACCL("+this.id+","+anotherCar.getCarId()+","+anotherCar.getRateOfAccl()+","+this.time+")\n";
+    					predList+="DIST_FROM("+this.id+","+getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
+    								anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+this.time+","+")\n";
     					}
     				}
-    	    			
     			}
-    			
     		}
-    	}
-    	FileUtilities.write2File(predList,predicatefile, true);
+    	    	FileUtilities.write2File(predList,predicatefile, true);
 	}
     
     double getDistanceBetween(double x1,double y1,double x2,double y2){
@@ -298,16 +294,7 @@ public class Scenario {
     	this.positiveReward=positive;
     	this.negativeReward=negative;
     }
-		
-//		i=0;
-//		while(i++!=10){
-//			if(!newCar.brake()){
-//				System.out.println(" *** Negative Reward at iteration : "+i);
-//				break;
-//			}
-//			newCar.getCarStatus();
-//		}
-  
+
 
     /*
     2/26/2015
