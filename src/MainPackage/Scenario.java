@@ -108,10 +108,10 @@ public class Scenario {
     }
 
     public boolean takeAction(String action,int carNumber){
-        time++;
+        //time++;
         if(action.equals("accelerate") && carList.contains(carList.get(carNumber))){
             //System.out.println("Action : Accelerate");
-            this.action="accelerate";
+            //this.action="accelerate";
             if(continueScenario(carList.get(carNumber).accelerate())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -119,14 +119,14 @@ public class Scenario {
             }
             else{
                 reward=false;
-                System.out.println(" **** NEGATIVE REWARD **** ");
+                //System.out.println(" **** NEGATIVE REWARD **** ");
                 return reward;
 
             }
         }
         else if(action.equals("brake")  && carList.contains(carList.get(carNumber))){
             //System.out.println("Action : brake");
-            this.action="brake";
+            //this.action="brake";
             if(continueScenario(carList.get(carNumber).brake())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -134,13 +134,13 @@ public class Scenario {
             }
             else{
                 reward=false;
-                System.out.println(" **** NEGATIVE REWARD **** ");
+                //System.out.println(" **** NEGATIVE REWARD **** ");
                 return reward;
             }
         }
         else if(action.equals("doNothing")  && carList.contains(carList.get(carNumber))){
             //System.out.println("Action : doNothing");
-            this.action="doNothing";
+            //this.action="doNothing";
             if(continueScenario(carList.get(carNumber).doNothing())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -148,13 +148,13 @@ public class Scenario {
             }
             else{
                 reward=false;
-                System.out.println(" **** NEGATIVE REWARD **** ");
+                //System.out.println(" **** NEGATIVE REWARD **** ");
                 return reward;
             }
         }
         else if(action.equals("moveRightLane") && carList.contains(carList.get(carNumber))){
             //System.out.println("Action : moveRightLane");
-            this.action="moveRightLane";
+            //this.action="moveRightLane";
             if(continueScenario(carList.get(carNumber).moveRightLane())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -162,12 +162,12 @@ public class Scenario {
             }
             else{
                 reward=false;
-                System.out.println(" **** NEGATIVE REWARD **** ");
+                //System.out.println(" **** NEGATIVE REWARD **** ");
                 return reward;
             }
         }
         else if(action.equals("moveLeftLane") && carList.contains(carList.get(carNumber))){
-            this.action="moveLeftLane";
+            //this.action="moveLeftLane";
             //System.out.println("Action : moveLeftLane");
             if(continueScenario(carList.get(carNumber).moveLeftLane())){
                 reward = true;
@@ -176,13 +176,13 @@ public class Scenario {
             }
             else{
                 reward=false;
-                System.out.println(" **** NEGATIVE REWARD **** ");
+                //System.out.println(" **** NEGATIVE REWARD **** ");
                 return reward;
             }
         }
         else{
             reward=false;
-            System.out.println(" Wrong Input Entered . Closing the simulator ");
+            //System.out.println(" Wrong Input Entered . Closing the simulator ");
             return reward;
         }
     }
@@ -193,10 +193,11 @@ public class Scenario {
      * 					 this function will be called from CarSimulator.java
      * 
      * */
-    public void startScenario(){
+    public void startScenario(String action1, String action2){
     	InputStreamReader reader=new InputStreamReader(System.in);
     	BufferedReader buf=new BufferedReader(reader);
     	do{
+    		
     		System.out.println("Enter Next Action");
     		try{
     		String input=buf.readLine();
@@ -268,6 +269,11 @@ public class Scenario {
     			System.out.println(" Wrong Input Entered . Closing the simulator ");
     			break;
     		}
+    		/*************** Applying Default Policy *****************/
+    		
+    		this.applyDefault(action1, action2);
+    		
+    		/********************************************************/
     		}
     		catch(Exception e){
     			System.out.println("Exception :"+e.getStackTrace());
@@ -282,6 +288,22 @@ public class Scenario {
     	}while(true);
     	
     	predicateLogic();
+    }
+    
+    public void applyDefault(String action1,String action2){
+    	for(Car car:this.carList){
+    		if(!car.isControlled()){
+    			int random=(int)(Math.random()*2+1);
+    			
+    			if(random==1){
+    				this.takeAction(action1, car.getCarId());
+    			}
+    			else{
+    				this.takeAction(action2, car.getCarId());
+    			}
+    			//carList.get(car.getCarId()).getCarStatus();
+    		}
+    	}
     }
     
     boolean continueScenario(boolean reward){
@@ -303,7 +325,7 @@ public class Scenario {
      * */
 
     void predicateLogic(){
-    	System.out.println("Episode : "+id);
+    	//System.out.println("Episode : "+id);
     	String predList=new String();
     	for(Car car: carList){
     		predList+="CAR("+this.id+","+car.getCarId()+","+this.time+")\n";
@@ -332,17 +354,9 @@ public class Scenario {
     						else{
     							predList+="IN_BACK("+this.id+","+anotherCar.getCarId()+","+this.time+")\n";
     						}
-    						
-    					predList+="LOCATION("+this.id+","+anotherCar.getCarId()+","+anotherCar.getCarCoordinates().getX()+","+
-									    anotherCar.getCarCoordinates().getY()+","+this.time+")\n";
-						predList+="SPEED("+this.id+","+anotherCar.getCarId()+","+anotherCar.getCurrSpeed()+","+this.time+")\n";
-						predList+="LANE("+this.id+","+anotherCar.getCarId()+","+anotherCar.getCurrentLane()+","+this.time+")\n";
-						predList+="DIRECTION("+this.id+","+anotherCar.getCarId()+","+anotherCar.getDirection()+","+this.time+")\n";
-						predList+="COLOR("+this.id+","+anotherCar.getCarId()+","+anotherCar.getColor()+","+this.time+")\n";
-						predList+="TYPE("+this.id+","+anotherCar.getCarId()+","+anotherCar.getType()+","+this.time+")\n";
-						predList+="RATE_OF_ACCL("+this.id+","+anotherCar.getCarId()+","+anotherCar.getRateOfAccl()+","+this.time+")\n";
+    						 
     					predList+="DIST_FROM("+this.id+","+getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
-							    	anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+this.time+","+")\n";
+							    	anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+","+this.time+")\n";
     					}
     				else if(car!=anotherCar&&car.getDirection()==anotherCar.getDirection()){
     					if((car.getDirection()=="east"&&(car.getCurrentLane()-anotherCar.getCurrentLane())>0)||
@@ -354,16 +368,6 @@ public class Scenario {
     						else{
     							predList+="IN_LEFT("+this.id+","+anotherCar.getCarId()+","+this.time+")\n";
     						}
-    					predList+="LOCATION("+this.id+","+anotherCar.getCarId()+","+anotherCar.getCarCoordinates().getX()+","+
-							    	anotherCar.getCarCoordinates().getY()+","+this.time+")\n";
-    					predList+="SPEED("+this.id+","+anotherCar.getCarId()+","+anotherCar.getCurrSpeed()+","+this.time+")\n";
-    					predList+="LANE("+this.id+","+anotherCar.getCarId()+","+anotherCar.getCurrentLane()+","+this.time+")\n";
-    					predList+="DIRECTION("+this.id+","+anotherCar.getCarId()+","+anotherCar.getDirection()+","+this.time+")\n";
-    					predList+="COLOR("+this.id+","+anotherCar.getCarId()+","+anotherCar.getColor()+","+this.time+")\n";
-    					predList+="TYPE("+this.id+","+anotherCar.getCarId()+","+anotherCar.getType()+","+this.time+")\n";
-    					predList+="RATE_OF_ACCL("+this.id+","+anotherCar.getCarId()+","+anotherCar.getRateOfAccl()+","+this.time+")\n";
-    					predList+="DIST_FROM("+this.id+","+getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
-    								anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+this.time+","+")\n";
     					}
     				}
     			}

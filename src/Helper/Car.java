@@ -193,7 +193,7 @@ public class Car {
 	}
 	
 	public int getCurrentLane(){
-		System.out.println("Current Lane : "+this.currentLane);
+		//System.out.println("Current Lane : "+this.currentLane);
 		return this.currentLane;
 	}
 	
@@ -835,7 +835,9 @@ public class Car {
 	public void getCarStatus(){
 		System.out.println("***************** Car Status *******************");
 		//System.out.println("MakeDate : "+makeDate);
-		//System.out.println("color : "+color) ;
+		System.out.println("CarID : "+carId);
+		System.out.println("Is Controlled : "+isControlled);
+		System.out.println("color : "+color) ;
 		System.out.println("currSpeed : "+currSpeed) ;
 		System.out.println("currentDist : "+currentDist);
 		System.out.println("prevDist : "+prevDist);
@@ -848,7 +850,7 @@ public class Car {
 		System.out.println("direction : "+direction) ; 
 		System.out.println("currentLane : "+currentLane) ; 
 		//System.out.println("currentAction : "+currentAction);
-		isControlled=true;
+		//isControlled=true;
 	}
 
     //Call this method when a car reaches the end of the road and its isLooping flag is set to true

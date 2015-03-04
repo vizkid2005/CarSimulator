@@ -11,7 +11,7 @@ public class TestScenario {
 		Scenario newScenario=new Scenario();
 		newScenario.setPredicatefile(predicateFile);
 		newScenario.initializeScenario(1,fileName,"John Hinkle Place",5);
-		newScenario.startScenario();
+		newScenario.startScenario("Accelarate","doNothing");
 	}
 	
 }
