@@ -36,7 +36,7 @@ public class ReadCarInput {
                         currSpeed, rateOfAccl,
                         rateOfBraking, maxSpeed,
                         intialLane, intialRoad,
-                        isLooping, isControlled);
+                        isLooping, isControlled,carList.size());
                 carList.add(newCar);
             }
         } catch (FileNotFoundException e) {

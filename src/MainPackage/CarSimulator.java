@@ -21,6 +21,7 @@ public class CarSimulator {
 
     static RoadMap map;
     static ArrayList<Car> carList;
+    static Scenario s;
 	public static void main(String[] args)throws Exception{
 		String roadFile = new String("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\Roads.csv");
         String carFile = new String("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\Cars.txt");
@@ -28,13 +29,17 @@ public class CarSimulator {
         map = new RoadMap(roadFile);
         ReadCarInput rci = new ReadCarInput();
         carList = rci.readCarInput(map, carFile);
-        Scenario s = new Scenario();
-
-
+        s = new Scenario();
+        s.initializeScenario(map,carList,"D:\\College - Spring 2015\\Independent Study\\CarSimulator\\output\\FOL.txt","D:\\College - Spring 2015\\Independent Study\\CarSimulator\\output\\logFile.txt");
+        for(int i = 0;i<5;i++){
+            boolean success = s.takeAction("accelerate",0);
+            if(!success){
+                System.out.println("Exiting");
+            }
+        }
+        s.endScenario();
     }
-	
-	
-    
+
     public State getCurrentState(){
 		State currentState = new State(carList);
 		return currentState;

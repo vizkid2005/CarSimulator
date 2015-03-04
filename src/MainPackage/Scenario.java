@@ -3,16 +3,13 @@ package MainPackage;
 import BigMap.RoadMap;
 import Helper.Car;
 import Helper.FileUtilities;
-import Helper.Policy;
 import Helper.Road;
 import Helper.RoadSegment;
 import Initializers.ReadRoadInput;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * This will be the object that will emulate time, distance and make everything work.
@@ -21,8 +18,8 @@ import java.util.Iterator;
 public class Scenario {
 	
 	ReadRoadInput r1=new ReadRoadInput();           // Reading coordinated from inputFile
-	RoadMap newMap;						           // Creating RoadMap from Roads generated.
-	ArrayList<Car> newCar;                                   // Creating a Car
+	RoadMap map;						           // Creating RoadMap from Roads generated.
+	ArrayList<Car> carList;                                   // Creating a Car
 	boolean reward=true;
 	String action="wrong action";
 	int id;           // Uniquely identifies each scenario
@@ -52,33 +49,43 @@ public class Scenario {
     public void setPredicatefile(String predicatefile){
     	this.predicatefile=predicatefile;
     }
-
+    public void setLogFile(String logFile){
+        this.logfile = logFile;
+    }
     public void initializeScenario(RoadMap map, ArrayList<Car> carList, String predicateFileName, String logFileName){
-
+        time=1; // Initializing the time for Episode
+        id = (int) Math.round(Math.random()*100000); //5 digit random number
+        this.map = map;
+        this.carList = carList;
+        this.predicatefile = predicateFileName;
+        this.logfile = logFileName;
+        for(int i = 0;i<carList.size();i++){
+            carList.get(i).getCarStatus();
+        }
     }
     public void initializeScenario(int numberOfCars,String fileName,String roadName,int laneNumber){
     	
     	time=1; // Initializing the time for Episode
     	id = (int) Math.round(Math.random()*100000); //5 digit random number
     	ArrayList<Road> roadList=r1.readRoadInput(fileName);    // and generating Road from it.
-    	newMap=new RoadMap(roadList);
+    	map =new RoadMap(roadList);
         //Even if using single car, try putting it in an ArrayList
         ArrayList<Car> allCars = new ArrayList<Car>();
     	/********* Creating a Car that can be controlled by user as per custom choice ************/
-    	//newCar=new Car[numberOfCars];
+    	//carList=new Car[numberOfCars];
     	
-        newCar=new ArrayList<Car>();
+        carList =new ArrayList<Car>();
     	for(int i=0;i<numberOfCars;i++){
-    		newCar.add(new Car());
+    		carList.add(new Car());
     	}
     	
-    	newCar.get(0).setCurrentLane(laneNumber);
+    	carList.get(0).setCurrentLane(laneNumber);
     	
-    	RoadSegment currentSegment=newMap.getRoadSegmentFromRoadName(roadName,laneNumber); 
+    	RoadSegment currentSegment= map.getRoadSegmentFromRoadName(roadName, laneNumber);
     	     /*Finding Current segment for a Car*/
-    	newCar.get(0).setCurrentSegment(currentSegment);
+    	carList.get(0).setCurrentSegment(currentSegment);
     	
-    	String roadOrientation=newMap.getRoadOrientation(roadName,laneNumber); 
+    	String roadOrientation= map.getRoadOrientation(roadName, laneNumber);
     	     /*Getting Road orientation for Road selected by user to put his car*/
 		System.out.println("roadOrientation : "+roadOrientation);
 		if(roadOrientation==null){
@@ -86,33 +93,109 @@ public class Scenario {
 			return;
 		}
 		
-		String carDirection=newCar.get(0).getCarDirection(roadOrientation,laneNumber);  
+		String carDirection= carList.get(0).getCarDirection(roadOrientation,laneNumber);
 			/*Calculation direction of a car.*/
 		if(carDirection==null){
 			System.out.println("Wrong Direction.");
 			return;
 		}
-		newCar.get(0).setDirection(carDirection);
-		newCar.get(0).setCarInitialPosition(currentSegment,laneNumber,carDirection);
-		//newCar.setCarPosition(4.0,2.0);
+		carList.get(0).setDirection(carDirection);
+		carList.get(0).setCarInitialPosition(currentSegment, laneNumber, carDirection);
+		//carList.setCarPosition(4.0,2.0);
     	
 		/******** Initialization Done **********/
-		newCar.get(0).getCarStatus();
+		carList.get(0).getCarStatus();
     }
-    
+
+    public boolean takeAction(String action,int carNumber){
+        time++;
+        if(action.equals("accelerate") && carList.contains(carList.get(carNumber))){
+            //System.out.println("Action : Accelerate");
+            this.action="accelerate";
+            if(continueScenario(carList.get(carNumber).accelerate())){
+                reward = true;
+                carList.get(carNumber).getCarStatus();
+                return reward;
+            }
+            else{
+                reward=false;
+                System.out.println(" **** NEGATIVE REWARD **** ");
+                return reward;
+
+            }
+        }
+        else if(action.equals("brake")  && carList.contains(carList.get(carNumber))){
+            //System.out.println("Action : brake");
+            this.action="brake";
+            if(continueScenario(carList.get(carNumber).brake())){
+                reward = true;
+                carList.get(carNumber).getCarStatus();
+                return true;
+            }
+            else{
+                reward=false;
+                System.out.println(" **** NEGATIVE REWARD **** ");
+                return reward;
+            }
+        }
+        else if(action.equals("doNothing")  && carList.contains(carList.get(carNumber))){
+            //System.out.println("Action : doNothing");
+            this.action="doNothing";
+            if(continueScenario(carList.get(carNumber).doNothing())){
+                reward = true;
+                carList.get(carNumber).getCarStatus();
+                return reward;
+            }
+            else{
+                reward=false;
+                System.out.println(" **** NEGATIVE REWARD **** ");
+                return reward;
+            }
+        }
+        else if(action.equals("moveRightLane") && carList.contains(carList.get(carNumber))){
+            //System.out.println("Action : moveRightLane");
+            this.action="moveRightLane";
+            if(continueScenario(carList.get(carNumber).moveRightLane())){
+                reward = true;
+                carList.get(carNumber).getCarStatus();
+                return reward;
+            }
+            else{
+                reward=false;
+                System.out.println(" **** NEGATIVE REWARD **** ");
+                return reward;
+            }
+        }
+        else if(action.equals("moveLeftLane") && carList.contains(carList.get(carNumber))){
+            this.action="moveLeftLane";
+            //System.out.println("Action : moveLeftLane");
+            if(continueScenario(carList.get(carNumber).moveLeftLane())){
+                reward = true;
+                carList.get(carNumber).getCarStatus();
+                return reward;
+            }
+            else{
+                reward=false;
+                System.out.println(" **** NEGATIVE REWARD **** ");
+                return reward;
+            }
+        }
+        else{
+            reward=false;
+            System.out.println(" Wrong Input Entered . Closing the simulator ");
+            return reward;
+        }
+    }
+
     /*
      * startScenario() : At this stage, this precedure will take input from console.However,
      * 				     its expected to get input from user in term on file entries.In future,
      * 					 this function will be called from CarSimulator.java
      * 
      * */
-    
     public void startScenario(){
-    	int i=0;
-    	
     	InputStreamReader reader=new InputStreamReader(System.in);
     	BufferedReader buf=new BufferedReader(reader);
-    	
     	do{
     		System.out.println("Enter Next Action");
     		try{
@@ -122,8 +205,8 @@ public class Scenario {
     		if(input.equals("accelerate")){
     			//System.out.println("Action : Accelerate");
     			this.action="accelerate";
-    			if(continueScenario(newCar.get(0).accelerate())){
-    				newCar.get(0).getCarStatus();
+    			if(continueScenario(carList.get(0).accelerate())){
+    				carList.get(0).getCarStatus();
     			}
     			else{
     				reward=false;
@@ -135,8 +218,8 @@ public class Scenario {
     		else if(input.equals("brake")){
     			//System.out.println("Action : brake");
     			this.action="brake";
-    			if(continueScenario(newCar.get(0).brake())){
-    				newCar.get(0).getCarStatus();
+    			if(continueScenario(carList.get(0).brake())){
+    				carList.get(0).getCarStatus();
     			}
     			else{
     				reward=false;
@@ -147,8 +230,8 @@ public class Scenario {
     		else if(input.equals("doNothing")){
     			//System.out.println("Action : doNothing");
     			this.action="doNothing";
-    			if(continueScenario(newCar.get(0).doNothing())){
-    				newCar.get(0).getCarStatus();
+    			if(continueScenario(carList.get(0).doNothing())){
+    				carList.get(0).getCarStatus();
     			}
     			else{
     				reward=false;
@@ -159,8 +242,8 @@ public class Scenario {
     		else if(input.equals("moveRightLane")){
     			//System.out.println("Action : moveRightLane");
     			this.action="moveRightLane";
-    			if(continueScenario(newCar.get(0).moveRightLane())){
-    				newCar.get(0).getCarStatus();
+    			if(continueScenario(carList.get(0).moveRightLane())){
+    				carList.get(0).getCarStatus();
     			}
     			else{
     				reward=false;
@@ -171,8 +254,8 @@ public class Scenario {
     		else if(input.equals("moveLeftLane")){
     			this.action="moveLeftLane";
     			//System.out.println("Action : moveLeftLane");
-    			if(continueScenario(newCar.get(0).moveLeftLane())){
-    				newCar.get(0).getCarStatus();
+    			if(continueScenario(carList.get(0).moveLeftLane())){
+    				carList.get(0).getCarStatus();
     			}
     			else{
     				reward=false;
@@ -202,10 +285,16 @@ public class Scenario {
     }
     
     boolean continueScenario(boolean reward){
-    	//newCar.getCarStatus();
+    	//carList.getCarStatus();
     	return this.reward&reward;
     }
-    
+
+    boolean endScenario(){
+        predicateLogic();
+        System.exit(0);
+        return true;
+    }
+
     /*
      * predicateLogic() : It will generate first order logic based on the current state of scenario.
      * 					  Its expected to call this procedure after execution of each action to record
@@ -216,7 +305,7 @@ public class Scenario {
     void predicateLogic(){
     	System.out.println("Episode : "+id);
     	String predList=new String();
-    	for(Car car:newCar){
+    	for(Car car: carList){
     		predList+="CAR("+this.id+","+car.getCarId()+","+this.time+")\n";
     		predList+="LOCATION("+this.id+","+car.getCarId()+","+car.getCarCoordinates().getX()+","+
 					        car.getCarCoordinates().getY()+","+this.time+")\n";
@@ -231,7 +320,7 @@ public class Scenario {
     			predList+="TOOK_ACTION("+this.id+","+car.getCarId()+","+this.action+","+this.time+")\n";
     			predList+="GOT_REWARD("+this.id+","+car.getCarId()+","+getReward()+","+this.time+")\n";
     			//"+this.id+","+this.time+","+this.action+","")\n";
-    			for(Car anotherCar:newCar){
+    			for(Car anotherCar: carList){
     				if(car!=anotherCar&&car.getCurrentLane()==anotherCar.getCurrentLane()
     						&&car.getDirection()==anotherCar.getDirection()){
     					if((car.getDirection()=="east"&& car.getCarCoordinates().getY()<anotherCar.getCarCoordinates().getY())||

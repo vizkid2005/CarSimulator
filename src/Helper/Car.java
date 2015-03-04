@@ -59,7 +59,8 @@ public class Car {
                double currSpeed, double rateOfAccl,
                     double rateOfBraking, double maxSpeed,
                         int currentLane, String initialRoad,
-                            boolean isLooping, boolean isControlled){
+                            boolean isLooping, boolean isControlled,
+                                int carListSize){
 
         this.setCarColor(color);
         this.setType(type);
@@ -72,9 +73,9 @@ public class Car {
         this.setLooping(isLooping);
         this.setDirection(this.getCarDirection(map.getRoadOrientation(initialRoad,currentLane),currentLane));
         this.currentSegment = map.getRoadSegmentFromRoadName(initialRoad,currentLane);
-        this.getNextSegment();
+        this.nextSegment = this.getNextSegment();
         this.setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
-        this.setCarId((int) Math.round(Math.random()*100000));
+        this.setCarId((int) carListSize);
 }
 	
 	/*********************** Setters *********************/
@@ -199,9 +200,6 @@ public class Car {
 	public Coordinates getCarCoordinates(){
 
         Coordinates c = new Coordinates(xCoordinate, yCoordinate);
-		System.out.println("***************** Car Co-ordinate Status *******************");
-		System.out.println("xCoordinate : "+xCoordinate) ;
-		System.out.println("yCoordinate : "+yCoordinate) ;
         return c;
     }
 	
