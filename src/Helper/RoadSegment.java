@@ -15,7 +15,8 @@ public class RoadSegment {
     GridPoint pointInGrid;
     boolean isIntersection; //A car can change direction only if it is at an intersection
     //1 mile = 5280 ft
-    public static final int length = 1; // Arbitrary length in feet, miles , etc. - Do not forget to intialize before running
+    //CurrSpeed, RateOfAccleration and RateOfBraking mus be adjusted according to this.
+    public final int length = 1; // Arbitrary length in feet, miles , etc. - Do not forget to intialize before running
 
     //Boilerplate constructor, the real work will be done by the get and set methods
     public RoadSegment(GridPoint gp, boolean isIntersection){
