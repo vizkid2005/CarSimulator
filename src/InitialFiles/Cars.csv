@@ -1,5 +1,4 @@
-#Color,Type,Current Speed,Rate of Acceleration,Rate of Braking,
-#Maximum Speed,Initial Lane,Initial Road,isLooping,isControlled
+#Color,Type,Current Speed,Rate of Acceleration,Rate of Braking,Maximum Speed,Initial Lane,Initial Road,isLooping,isControlled
 RED,SUV,1.0,200,0.5,5.0,2,10th Street,false,true
 BLUE,COP,1.0,200,0.5,3.0,3,10th Street,false,false
 BLACK,COP,1.0,200,0.5,3.0,3,Woodlawn Avenue,false,false

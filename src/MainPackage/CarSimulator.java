@@ -37,7 +37,7 @@ public class CarSimulator {
 //                System.out.println("Exiting");
 //            }
 //        }
-        s.startScenario("accelerate","doNothing");
+//        s.startScenario("accelerate","doNothing");
         s.endScenario();
     }
 
