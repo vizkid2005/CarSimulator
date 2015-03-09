@@ -1,14 +1,8 @@
 package Helper;
-
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.math.*;
-
 import BigMap.RoadMap;
 
-
+//Cleaned
 public class Car {
 	DecimalFormat df = new DecimalFormat("#.00000");
 	double TIME=Double.parseDouble(df.format(1.0/60.0)); // Time set to 1Sec used for laws of motion
@@ -135,7 +129,7 @@ public class Car {
 		double segmentYCoordinate=Segment.getPointInGrid().getY();
 		if(carDirection.equals("north")){
 			this.yCoordinate=segmentYCoordinate+((laneNumber-1)*0.1667);  // 1/6 =0.1667
-			this.xCoordinate=segmentXCoordinate+1;
+			this.xCoordinate=segmentXCoordinate;
 			return true;
 		}
 		else if(carDirection.equals("south")){
@@ -150,7 +144,7 @@ public class Car {
 		}
 		else if(carDirection.equals("west")){
 			this.xCoordinate=segmentXCoordinate+((6-laneNumber)*0.1667);  // 1/6 =0.1667
-			this.yCoordinate=segmentYCoordinate+1;
+			this.yCoordinate=segmentYCoordinate;
 			return true;
 		}
 	return false;
@@ -196,7 +190,6 @@ public class Car {
 	public String getDirection(){
 		return this.direction;
 	}
-
 	public String getCarDirection(String orientation,int lane){
 	/*
 	 * getCarDirection() - Depending on the Road orientation and lane of a car , this function will
@@ -228,6 +221,7 @@ public class Car {
     public void setLooping(boolean isLooping) {
         this.isLooping = isLooping;
     }
+
 	public boolean accelerate(){
 
         /*
@@ -239,9 +233,9 @@ public class Car {
 
 		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0))); // S=ut+0.5at^2 Equation of Motion
         //this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-        //this.prevDist=((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+        this.prevDist=((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
 
-		if(this.currentDist>=currentSegment.length){                      // End of Segment
+		if(this.currentDist>=RoadSegment.length){                      // End of Segment
 	        	//this.prevDist=0.0;
 				this.currentDist=0.0;
 				this.currentSegment=getNextSegment();
@@ -278,7 +272,7 @@ public class Car {
 	        this.currentDist = this.currentDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0))); // s = ut - 1/2 at^2
 	        //this.prevDist=this.prevDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
 	        this.prevDist=((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-	        if(this.currentDist>=currentSegment.length){                      // End of Segment
+	        if(this.currentDist>=RoadSegment.length){                      // End of Segment
 	        	this.currentDist=0.0;
 	        	this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
@@ -305,8 +299,8 @@ public class Car {
 	public boolean doNothing(){
 		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));  // S=ut+0.5at^2 Equation of Motion
 	    //this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-        //this.prevDist=((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-	    if(this.currentDist>=currentSegment.length){                      // End of Segment
+        this.prevDist=((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	    if(this.currentDist>=RoadSegment.length){                      // End of Segment
 	    	this.currentDist=0.0;
 	        	this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
@@ -334,8 +328,8 @@ public class Car {
 	 * */
 		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));  // S=ut+0.5at^2 Equation of Motion
 	    //this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-		//this.prevDist=((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-	    if(this.currentDist>=currentSegment.length){                      // End of Segment
+		this.prevDist=((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	    if(this.currentDist>=RoadSegment.length){                      // End of Segment
 	    	this.currentDist=0.0;
         	String prevDirection=this.direction;
         	this.currentSegment=getNextSegment();
@@ -359,7 +353,45 @@ public class Car {
 	    	return(getRightMovePosition());
 	    }
 	}
-	boolean getRightMovePosition(){
+    public boolean moveLeftLane(){
+	/*
+	 * moveLeftLane() : This action will change lane of car to Left.If Car is already in the left
+	 * 					 most lane, then if user tried using moveLeftLane() , the car will be run out of
+	 * 					 map and results into negative reward.Please note that this action can not be
+	 * 				     used for changing road but can be used before changing road to get car in
+	 * 					 leftmost lane and then use either doNothing() or Accelerate() to change
+	 * 					 the Road.So even if you are at intersection of Roads and try using moveRightLane()
+	 * 				     this might give negative reward depending on the lane you are in.
+	 * */
+        //System.out.println("***** Move Left Lane ******");
+        this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0))); // S=ut+0.5at^2 Equation of Motion
+        //this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+        this.prevDist=((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+        if(this.currentDist>=RoadSegment.length){                      // End of Segment
+            this.currentDist=0.0;
+            String prevDirection=this.direction;
+            this.currentSegment=getNextSegment();
+            if(this.direction.equals(prevDirection)){
+                return(getLeftMovePosition());
+            }
+            if(this.currentSegment==null){
+                reward=false;
+                return reward;
+            }
+            else{
+                System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+                setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+                reward=true;
+                return reward;
+            }
+        }
+        else{
+            /************ Calculate the possible next lane ***********************/
+            return(getLeftMovePosition());
+        }
+    }
+
+    public boolean getRightMovePosition(){
 
 	    if(this.direction.equals("east")){
 	    	if(this.currentLane==3||this.currentLane==2) {
@@ -411,47 +443,7 @@ public class Car {
 	    }
 	    return reward;
 	}
-	/*
-	 * moveLeftLane() : This action will change lane of car to Left.If Car is already in the left
-	 * 					 most lane, then if user tried using moveLeftLane() , the car will be run out of 
-	 * 					 map and results into negative reward.Please note that this action can not be
-	 * 				     used for changing road but can be used before changing road to get car in 
-	 * 					 leftmost lane and then use either doNothing() or Accelerate() to change 
-	 * 					 the Road.So even if you are at intersection of Roads and try using moveRightLane()
-	 * 				     this might give negative reward depending on the lane you are in.
-	 * */
-	public boolean moveLeftLane(){
-		System.out.println("***** Move Left Lane ******");
-		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-			// S=ut+0.5at^2 Equation of Motion
-	    //this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-		this.prevDist=((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
-	    if(this.currentDist>=currentSegment.length){                      // End of Segment
-	    	this.currentDist=0.0;
-        	String prevDirection=this.direction;
-        	this.currentSegment=getNextSegment();
-        	if(this.direction.equals(prevDirection)){
-        		return(getLeftMovePosition());
-        	}
-        	if(this.currentSegment==null){
-        		reward=false;
-        		return reward;
-        	}
-        	else{
-        		System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
-        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
-        		reward=true;
-        		return reward;
-        	}
-        }
-	    
-	    /************ Calculate the possible next lane ***********************/
-	    else{
-	    	return(getLeftMovePosition());
-	    }
-	    
-	}
-	boolean getLeftMovePosition(){
+	public boolean getLeftMovePosition(){
 		if(this.direction.equals("east")){
 	    	if(this.currentLane==1||this.currentLane==2) {
 	    		this.currentLane+=1;
@@ -665,7 +657,8 @@ public class Car {
 	    	xCoordinate=xCoordinate - this.prevDist;
 	    }
     }
-/*************** Validation Procedure *************************/
+
+    /*************** Validation Procedure *************************/
 	boolean isSpeedGreaterthanZero(){
 		if(this.currSpeed<0){
 			return false;

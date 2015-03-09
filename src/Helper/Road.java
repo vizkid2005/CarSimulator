@@ -6,6 +6,7 @@ package Helper;
   * An Arraylist of all the Road objects will be passed to the VirtualMap constructor
   * which will initalize the LinkedList of road segments.
   */
+//Cleaned
 public class Road {
 
 	GridPoint beginPoint;
@@ -30,34 +31,27 @@ public class Road {
     public String getOrientation(){
         return orientation;
     }
-    public GridPoint getBeginPoint(){
-		return beginPoint;
-	}
-	public GridPoint getEndPoint(){
-		return endPoint;
-	}
-	public String getRoadName(){
-		return roadName;
-	}
 	public boolean setBeginPoint(GridPoint newBp){
 		beginPoint = newBp;
 		return true;
 		//Return false if the above statement fails #Futurework
+	}
+    public GridPoint getBeginPoint(){
+		return beginPoint;
 	}
 	public boolean setEndPoint(GridPoint newEp){
 		endPoint = newEp;
 		return true;
 		//Return false if the above statement fails #Futurework
 	}
+	public GridPoint getEndPoint(){
+		return endPoint;
+	}
 	public boolean setRoadName(String newName){
 		roadName = newName;
 		return true;
-		//Return false if the above statement fails #Futurework_
 	}
-
-	/*
-	 * I think we need to create the linked list of road segments here
-	 * Lets see where this goes.
-	 *
-	 */
+	public String getRoadName(){
+		return roadName;
+	}
 }

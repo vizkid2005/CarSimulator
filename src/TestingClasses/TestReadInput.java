@@ -19,7 +19,6 @@ public class TestReadInput {
 			print(g);
 		}
 	}
-	
 	public static void print(Road g){
 		System.out.print("\t Start Point : "+g.getBeginPoint().getX());
 		System.out.print("\t"+g.getBeginPoint().getY());

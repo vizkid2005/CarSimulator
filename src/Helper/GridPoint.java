@@ -22,21 +22,17 @@ public class GridPoint {
         this.x = x;
         this.y = y;
     }
-
     public int getX(){
         return x;
     }
-
     public int getY(){
         return y;
     }
-
     public boolean setX(int newX) {
         x = newX;
         return true;
         //Return false if the above statement fails #Futurework
     }
-
     public boolean setY(int newY) {
         y = newY;
         return true;

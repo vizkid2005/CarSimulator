@@ -23,8 +23,8 @@ public class CarSimulator {
     static ArrayList<Car> carList;
     static Scenario s;
 	public static void main(String[] args)throws Exception{
-		String roadFile = new String("E:\\Spring 2015\\Indepenedent Study\\CarSimulator\\CarSimulator\\src\\InitialFiles\\Roads.csv");
-        String carFile = new String("E:\\Spring 2015\\Indepenedent Study\\CarSimulator\\CarSimulator\\src\\InitialFiles\\Cars.csv");
+		String roadFile = new String("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\Roads.csv");
+        String carFile = new String("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\Cars.csv");
         //Just this call should suffice creating the RoadMap, There are a lot of messed up function calls that have to be resolved.
         map = new RoadMap(roadFile);
         ReadCarInput rci = new ReadCarInput();

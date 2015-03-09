@@ -17,7 +17,7 @@ public class TestIntersectionPoints {
 
         ReadRoadInput r = new ReadRoadInput();
         //Change name to local filename
-        ArrayList<Road> listOfRoads = r.readRoadInput("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\Roads_1.csv");
+        ArrayList<Road> listOfRoads = r.readRoadInput("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\Roads.csv");
         /*Road road1 = new Road(new GridPoint(1,2),new GridPoint(1,5),"Road1");
         Road road5 = new Road(new GridPoint(1,3),new GridPoint(3,3),"Road5");
         Road road2 = new Road(new GridPoint(3,2),new GridPoint(3,6),"Road2");

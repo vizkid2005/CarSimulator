@@ -6,42 +6,36 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 
 
 public class FileUtilities {
+
 	public static void write2File(String str, String fileName){
  		try{
 			//Create file 
 			File file = new File(fileName);
-
 			//write to this file
 			FileUtils.writeStringToFile(file, str+"\n");
-
 		}catch (IOException e){ //Catch exception if any
 			System.err.println("IO Error: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
-
 	public static void write2File(String str, String fileName, boolean append){
  		try{
 			//Create file 
 			File file = new File(fileName);
-
 			//write to this file
 			FileUtils.writeStringToFile(file, str+"\n", append);
-
 		}catch (IOException e){ //Catch exception if any
 			System.err.println("IO Error: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
-
-	// Count number of lines in an ascii file
 	public static int countLines(String filename){
+	// Count number of lines in an ascii file
 		int cnt = 0;
 		try {
 			LineNumberReader reader  = new LineNumberReader(new FileReader(filename));
@@ -54,18 +48,14 @@ public class FileUtilities {
 		}
 		return cnt;
 	}
-	
-	// read from the startLine to endLine from an ascii file
 	public static ArrayList<String> readLines(String fileName, int startLine, int endLine)  {
+	// read from the startLine to endLine from an ascii file
 		String line = null;
 		int currentLineNo = 0;
-
 		ArrayList<String> lines = new ArrayList<String>();
-		
 		BufferedReader in = null;
 		try {
 			in = new BufferedReader (new FileReader(fileName));
-
 			//read to startLine
 			while(currentLineNo<startLine) {
 				if (in.readLine()==null) {
@@ -74,16 +64,12 @@ public class FileUtilities {
 				}
 				currentLineNo++;
 			}
-
 			//read until endLine
 			while(currentLineNo<=endLine) {
 				line = in.readLine();
 				if (line==null) {
-					// here, we'll forgive a short file
-					// note finally still cleans up
 					return lines;
 				}
-				//System.out.println(line);
 				lines.add(line);
 				currentLineNo++;
 			}
@@ -92,12 +78,10 @@ public class FileUtilities {
 		} finally {
 			try { if (in!=null) in.close(); } catch(IOException ignore) {}
 		}
-		
 		return lines;
 	}
-	
-	// Read in a comma separated file
 	public static ArrayList<String[]> readCSVDoubleFile(String filename){
+	// Read in a comma separated file
 		ArrayList<String[]> data = new ArrayList<String[]>();
 		BufferedReader br = null;
 		try {
@@ -127,7 +111,6 @@ public class FileUtilities {
 		}
 		return data;
 	}
-	
 	public static void moveAllFiles(String sourceDir, String destDir, String suffix){
 		File dest = new File(destDir);
 		File dir = new File(sourceDir);
@@ -143,7 +126,6 @@ public class FileUtilities {
 			}
 		}
 	}
-	
 	public static void copyAllFiles(String sourceDir, String destDir, String suffix){
 		File dest = new File(destDir);
 		File dir = new File(sourceDir);

@@ -6,7 +6,6 @@ import BigMap.RoadMap;
 import Helper.Car;
 /*
 This class cannot be used unless a RoadMap is Initialized
-
  */
 public class ReadCarInput {
     ArrayList<Car> carList = new ArrayList<Car>();
@@ -46,7 +45,7 @@ public class ReadCarInput {
             e.printStackTrace();
         }
 
-        for(int i =0;i<carList.size();i++){
+        /*for(int i =0;i<carList.size();i++){
             System.out.println();
             System.out.println(carList.get(i).getColor());
             System.out.println(carList.get(i).getType());
@@ -59,10 +58,7 @@ public class ReadCarInput {
             System.out.println(carList.get(i).getNextSegment());
             System.out.println(carList.get(i).getDirection());
             System.out.println(carList.get(i).getCarCoordinates().getX()+ " -- "+ carList.get(i).getCarCoordinates().getY());
-
-        }
-
+        }*/
         return carList;
-
     }
 }

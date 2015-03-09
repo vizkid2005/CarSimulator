@@ -17,16 +17,16 @@ import java.util.ArrayList;
  */
 public class Scenario {
 	
-	ReadRoadInput r1=new ReadRoadInput();           // Reading coordinated from inputFile
-	RoadMap map;						           // Creating RoadMap from Roads generated.
-	ArrayList<Car> carList;                                   // Creating a Car
+	ReadRoadInput r1=new ReadRoadInput();
+	RoadMap map;
+	ArrayList<Car> carList;
 	boolean reward=true;
 	String action="wrong action";
-	int id;           // Uniquely identifies each scenario
-	int time;         // Time for Episode  
-	double positiveReward=1.0; // Reward Values for positive Action
-	double negativeReward=0.0; // Reward values for negative Action
-	String predicatefile; //Contains predicates from various
+	int id;                             // Uniquely identifies each scenario
+	int time;                           // Time for Episode
+	double positiveReward=1.0;          // Reward Values for positive Action
+	double negativeReward=0.0;          // Reward values for negative Action
+	String predicatefile;               //Contains predicates from various
     String logfile;
 
 	//Gives the status of the entire environment in some form that is understandable
@@ -38,14 +38,14 @@ public class Scenario {
 
     /*
      * initializeScenario() - This will initialize the scenario.Following task will be performed.
-     * 						  1.Get Road details from input file.
-     * 						  2.Build RoadMap
-     * 						  3.Get number of cars as Input variable.
-     * 						  4.Initialize all cars
+     * 						  1.Set PredicateFile path,LogFile Path
+     * 						  2.Get Road details,Car details from input file
+     * 						  3.Build RoadMap
+     * 						  4.Initialize the Cars
+     *
      * */
 
-    //Has to be modified a bit. To get the sequence of operations correct.
-    
+
     public void setPredicatefile(String predicatefile){
     	this.predicatefile=predicatefile;
     }
@@ -53,7 +53,7 @@ public class Scenario {
         this.logfile = logFile;
     }
     public void initializeScenario(RoadMap map, ArrayList<Car> carList, String predicateFileName, String logFileName){
-        time=1; // Initializing the time for Episode
+        time=1;                             // Initializing the time for Episode
         id = (int) Math.round(Math.random()*100000); //5 digit random number
         this.map = map;
         this.carList = carList;
@@ -64,8 +64,12 @@ public class Scenario {
         }
     }
     public void initializeScenario(int numberOfCars,String fileName,String roadName,int laneNumber){
-    	
-    	time=1; // Initializing the time for Episode
+
+    	/* NEED TO MAKE CHANGES IN A CAR WHICH IS BEING CONTROLLED BY USER.
+    	*  CURRENTLY CAR WHICH IS USER CONTROLLED IS SET AS CAR_0.NEED TO MAKE IT
+    	*  GENERAL*/
+
+        time=1; // Initializing the time for Episode
     	id = (int) Math.round(Math.random()*100000); //5 digit random number
     	ArrayList<Road> roadList=r1.readRoadInput(fileName);    // and generating Road from it.
     	map =new RoadMap(roadList);
@@ -108,10 +112,14 @@ public class Scenario {
     }
 
     public boolean takeAction(String action,int carNumber){
-        //time++;
+        /*
+        * This method will take action and car number as input.It will execute that action and will
+        * return TRUE or FALSE depending upon its success and failure.
+        * */
+
+
+
         if(action.equals("accelerate") && carList.contains(carList.get(carNumber))){
-            //System.out.println("Action : Accelerate");
-            //this.action="accelerate";
             if(continueScenario(carList.get(carNumber).accelerate())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -119,14 +127,11 @@ public class Scenario {
             }
             else{
                 reward=false;
-                //System.out.println(" **** NEGATIVE REWARD **** ");
                 return reward;
 
             }
         }
         else if(action.equals("brake")  && carList.contains(carList.get(carNumber))){
-            //System.out.println("Action : brake");
-            //this.action="brake";
             if(continueScenario(carList.get(carNumber).brake())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -134,13 +139,10 @@ public class Scenario {
             }
             else{
                 reward=false;
-                //System.out.println(" **** NEGATIVE REWARD **** ");
                 return reward;
             }
         }
         else if(action.equals("doNothing")  && carList.contains(carList.get(carNumber))){
-            //System.out.println("Action : doNothing");
-            //this.action="doNothing";
             if(continueScenario(carList.get(carNumber).doNothing())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -148,13 +150,10 @@ public class Scenario {
             }
             else{
                 reward=false;
-                //System.out.println(" **** NEGATIVE REWARD **** ");
                 return reward;
             }
         }
         else if(action.equals("moveRightLane") && carList.contains(carList.get(carNumber))){
-            //System.out.println("Action : moveRightLane");
-            //this.action="moveRightLane";
             if(continueScenario(carList.get(carNumber).moveRightLane())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -162,13 +161,10 @@ public class Scenario {
             }
             else{
                 reward=false;
-                //System.out.println(" **** NEGATIVE REWARD **** ");
                 return reward;
             }
         }
         else if(action.equals("moveLeftLane") && carList.contains(carList.get(carNumber))){
-            //this.action="moveLeftLane";
-            //System.out.println("Action : moveLeftLane");
             if(continueScenario(carList.get(carNumber).moveLeftLane())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -176,24 +172,23 @@ public class Scenario {
             }
             else{
                 reward=false;
-                //System.out.println(" **** NEGATIVE REWARD **** ");
                 return reward;
             }
         }
         else{
             reward=false;
-            //System.out.println(" Wrong Input Entered . Closing the simulator ");
             return reward;
         }
     }
 
+
+    public void startScenario(String action1, String action2){
     /*
-     * startScenario() : At this stage, this precedure will take input from console.However,
+     * startScenario() : This method will take input from console.However,
      * 				     its expected to get input from user in term on file entries.In future,
      * 					 this function will be called from CarSimulator.java
-     * 
+     *
      * */
-    public void startScenario(String action1, String action2){
     	InputStreamReader reader=new InputStreamReader(System.in);
     	BufferedReader buf=new BufferedReader(reader);
     	do{
