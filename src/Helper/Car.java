@@ -259,6 +259,11 @@ public class Car {
         return reward;
 
     }
+	
+	public boolean accelerate(double rateOfAccl){
+		this.rateOfAccl=rateOfAccl;
+		return(accelerate());     
+		}
 	public boolean brake(){
 	/*
 	 * Brake : Brake will work opposite to the acceleration i.e. it will reduce speed by using equation of
@@ -296,6 +301,11 @@ public class Car {
 		}
         return reward;
     }
+	
+	public boolean brake(double rateOfBreaking){
+		this.rateOfBraking=rateOfBreaking;
+		return(brake());
+	}
 	public boolean doNothing(){
 		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));  // S=ut+0.5at^2 Equation of Motion
 	    //this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
