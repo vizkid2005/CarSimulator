@@ -10,6 +10,7 @@ import Initializers.ReadRoadInput;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * This will be the object that will emulate time, distance and make everything work.
@@ -76,78 +77,79 @@ public class Scenario {
 			this.action="accelerate";
 			if(continueScenario(carList.get(carNumber).accelerate())){
 				reward = true;
-                carList.get(carNumber).getCarStatus();
-                
-			}
+                carList.get(carNumber).getCarStatus();			}
 			else{
 				reward=false;
-                 
 			}
 		}
 		else if(action.equals("brake")  && carList.contains(carList.get(carNumber))){
             if(continueScenario(carList.get(carNumber).brake())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
-                 
             }
             else{
                 reward=false;
-                 
             }
         }
 		else if(action.equals("doNothing")  && carList.contains(carList.get(carNumber))){
             if(continueScenario(carList.get(carNumber).doNothing())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
-                 
             }
             else{
                 reward=false;
-                 
             }
         }
 		else if(action.equals("moveRightLane") && carList.contains(carList.get(carNumber))){
             if(continueScenario(carList.get(carNumber).moveRightLane())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
-                 
             }
             else{
                 reward=false;
-                 
             }
         }
 		else if(action.equals("moveLeftLane") && carList.contains(carList.get(carNumber))){
             if(continueScenario(carList.get(carNumber).moveLeftLane())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
-                 
             }
             else{
                 reward=false;
-                 
             }
         }
 		else{
             reward=false;
-             
         }
 		/*************** Applying Default Policy *****************/
-		
-		//defaultPolicy();
-		
+		defaultPolicy();
 		/********************************************************/
 		predicateLogic();
 		return reward;
-		
+    }
+    public void defaultPolicy(){
+        Iterator<Car> carIter = carList.iterator();
+        while(carIter.hasNext()){
+            Car temp = carIter.next();
+            if(!temp.isControlled()){
+                double random = Math.random();
+                if(random < 0.33){
+                    this.takeAction("accelerate",temp.getCarId());
+                }
+                else if(random < 0.66){
+                    this.takeAction("brake",temp.getCarId());
+                }
+                else{
+                    this.takeAction("doNothing",temp.getCarId());
+                }
             }
+        }
+    }
 
-       
     boolean continueScenario(boolean reward){
     	//carList.getCarStatus();
     	return this.reward&reward;
     }
-
     boolean endScenario(){
         predicateLogic();
         System.exit(0);

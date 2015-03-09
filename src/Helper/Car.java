@@ -248,14 +248,19 @@ public class Car {
 				this.currentDist=0.0;
 				this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
-	        		//If the car is looping then reset to initial position.
-                    if(isLooping){
-                        resetPosition();
-                    }
+                    if(isControlled){
+                        reward=false;
+                        return reward;}
                     else{
-                        //What if the car is not looping ?
-                        //Do we need to remove the car ?
-                        //This has to be done from Scenario
+                        //If the car is looping then reset to initial position.
+                        if(isLooping){
+                            resetPosition();
+                        }
+                        else{
+                            //What if the car is not looping ?
+                            //Do we need to remove the car ?
+                            //This has to be done from Scenario
+                        }
                     }
 	        	}
 	        	else{
@@ -274,7 +279,6 @@ public class Car {
         return reward;
 
     }
-	
 	public boolean accelerate(double rateOfAccl){
 		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*rateOfAccl*Math.pow(TIME, 2.0))); // S=ut+0.5at^2 Equation of Motion
         //this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
@@ -285,8 +289,20 @@ public class Car {
 				this.currentDist=0.0;
 				this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
-	        		reward=false;
-	        		return reward;
+                    if(isControlled){
+                    reward=false;
+	        		return reward;}
+                    else{
+                        //If the car is looping then reset to initial position.
+                        if(isLooping){
+                            resetPosition();
+                        }
+                        else{
+                            //What if the car is not looping ?
+                            //Do we need to remove the car ?
+                            //This has to be done from Scenario
+                        }
+                    }
 	        	}
 	        	else{
 	        		//System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
@@ -304,7 +320,6 @@ public class Car {
         return reward;
 
      }
-	
 	public boolean brake(){
 	/*
 	 * Brake : Brake will work opposite to the acceleration i.e. it will reduce speed by using equation of
@@ -322,8 +337,20 @@ public class Car {
 	        	this.currentDist=0.0;
 	        	this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
-	        		reward=false;
-	        		return reward;
+                    if(isControlled){
+                        reward=false;
+                        return reward;}
+                    else{
+                        //If the car is looping then reset to initial position.
+                        if(isLooping){
+                            resetPosition();
+                        }
+                        else{
+                            //What if the car is not looping ?
+                            //Do we need to remove the car ?
+                            //This has to be done from Scenario
+                        }
+                    }
 	        	}
 	        	else{
 	        		//System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
@@ -342,7 +369,6 @@ public class Car {
 		}
         return reward;
     }
-	
 	public boolean brake(double rateOfBreaking){
 		if(this.currSpeed==0){
 			reward=false;
@@ -355,8 +381,20 @@ public class Car {
 	        	this.currentDist=0.0;
 	        	this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
-	        		reward=false;
-	        		return reward;
+                    if(isControlled){
+                        reward=false;
+                        return reward;}
+                    else{
+                        //If the car is looping then reset to initial position.
+                        if(isLooping){
+                            resetPosition();
+                        }
+                        else{
+                            //What if the car is not looping ?
+                            //Do we need to remove the car ?
+                            //This has to be done from Scenario
+                        }
+                    }
 	        	}
 	        	else{
 	        		//System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
@@ -383,8 +421,20 @@ public class Car {
 	    	this.currentDist=0.0;
 	        	this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
-	        		reward=false;
-	        		return reward;
+                    if(isControlled){
+                        reward=false;
+                        return reward;}
+                    else{
+                        //If the car is looping then reset to initial position.
+                        if(isLooping){
+                            resetPosition();
+                        }
+                        else{
+                            //What if the car is not looping ?
+                            //Do we need to remove the car ?
+                            //This has to be done from Scenario
+                        }
+                    }
 	        	}
 	        	else{
 	        		//System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
@@ -416,8 +466,23 @@ public class Car {
         		return(getRightMovePosition());
         	}
         	if(this.currentSegment==null){
-        		reward=false;
-        		return reward;
+        		//The below code may cause the car to reset if it moves out of the designated road
+                if(isControlled){
+                    reward=false;
+                    return reward;}
+                else{
+                    //If the car is looping then reset to initial position.
+                    if(isLooping){
+                        resetPosition();
+                        return true;
+                    }
+                    else{
+                        //What if the car is not looping ?
+                        //Do we need to remove the car ?
+                        //This has to be done from Scenario
+                        return false;
+                    }
+                }
         	}
         	else{
         		//System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
@@ -431,6 +496,7 @@ public class Car {
 	    else{
 	    	return(getRightMovePosition());
 	    }
+
 	}
     public boolean moveLeftLane(){
 	/*
@@ -454,8 +520,22 @@ public class Car {
                 return(getLeftMovePosition());
             }
             if(this.currentSegment==null){
-                reward=false;
-                return reward;
+                if(isControlled){
+                    reward=false;
+                    return reward;}
+                else{
+                    //If the car is looping then reset to initial position.
+                    if(isLooping){
+                        resetPosition();
+                        return true;
+                    }
+                    else{
+                        //What if the car is not looping ?
+                        //Do we need to remove the car ?
+                        //This has to be done from Scenario
+                        return false;
+                    }
+                }
             }
             else{
                 System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());

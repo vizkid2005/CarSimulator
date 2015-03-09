@@ -25,13 +25,31 @@ public class CarSimulator {
 	public static void main(String[] args)throws Exception{
 		String roadFile = new String("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\Roads.csv");
         String carFile = new String("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\Cars.csv");
-        //Just this call should suffice creating the RoadMap, There are a lot of messed up function calls that have to be resolved.
         map = new RoadMap(roadFile);
         ReadCarInput rci = new ReadCarInput();
         carList = rci.readCarInput(map, carFile);
+
+        //Create a new Scenario object
         s = new Scenario();
+        //Initialize the new Scenario object with the Desired RoadMap and CarList.
         s.initializeScenario(map,carList,"E:\\Spring 2015\\Indepenedent Study\\CarSimulator\\CarSimulator\\output\\FOL.txt","E:\\Spring 2015\\Indepenedent Study\\CarSimulator\\CarSimulator\\output\\logFile.txt");
-//        for(int i = 0;i<5;i++){
+
+        //Here is a demo policy that randomly takes any one of the actions accelerate,brake or doNothing.
+        //Replace the code below with your learner.
+        for(int i= 0;i<20;i++){
+            double random = Math.random();
+            if(random < 0.33){
+                s.takeAction("accelerate",0);
+            }
+            else if(random < 0.66){
+                s.takeAction("brake",0);
+            }
+            else{
+                s.takeAction("doNothing",0);
+            }
+        }
+
+//      for(int i = 0;i<5;i++){
 //            boolean success = s.takeAction("accelerate",1);
 //            if(!success){
 //                System.out.println("Exiting");
