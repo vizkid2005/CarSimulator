@@ -32,6 +32,13 @@ public class Car {
     private RoadSegment nextSegment;
 	private String direction; //North, South, East, West
 
+    //Variables below are used to keep track of the starting segment.
+    //Basically, we are keeping a screenshot of what parameters were used to initialize the car
+    private RoadSegment startSegment;
+    private RoadMap map;
+    private int startLane;
+    private String startRoad;
+
     //This constructor is for debug purposes
     public Car(){
 		//Date date=new Date();
@@ -69,8 +76,9 @@ public class Car {
         this.setCurrentLane(currentLane);
         this.setIsControlled(isControlled);
         this.setLooping(isLooping);
-        this.setDirection(this.getCarDirection(map.getRoadOrientation(initialRoad,currentLane),currentLane));
+        this.setDirection(this.getCarDirection(map.getRoadOrientation(initialRoad, currentLane), currentLane));
         this.currentSegment = map.getRoadSegmentFromRoadName(initialRoad,currentLane);
+        this.startSegment = this.currentSegment;
         this.nextSegment = this.getNextSegment();
         this.setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
         this.setCarId((int) carListSize);
@@ -149,9 +157,12 @@ public class Car {
 		}
 	return false;
 	}
-	
-	/************************** Getter ************************/
-	
+    public void setLooping(boolean isLooping) {
+        this.isLooping = isLooping;
+    }
+
+    /************************** Getter ************************/
+
 	public int getCarId(){
     	return this.carId;
     }
@@ -218,9 +229,6 @@ public class Car {
     public boolean isLooping() {
         return isLooping;
     }
-    public void setLooping(boolean isLooping) {
-        this.isLooping = isLooping;
-    }
 
 	public boolean accelerate(){
 
@@ -240,8 +248,15 @@ public class Car {
 				this.currentDist=0.0;
 				this.currentSegment=getNextSegment();
 	        	if(this.currentSegment==null){
-	        		reward=false;
-	        		return reward;
+	        		//If the car is looping then reset to initial position.
+                    if(isLooping){
+                        resetPosition();
+                    }
+                    else{
+                        //What if the car is not looping ?
+                        //Do we need to remove the car ?
+                        //This has to be done from Scenario
+                    }
 	        	}
 	        	else{
 	        		//System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
@@ -695,8 +710,23 @@ public class Car {
 		//System.out.println("currentAction : "+currentAction);
 		//isControlled=true;
 	}
-    public void resetPosition(RoadSegment rs){
-
+    public void resetPosition(){
+        //Update : This should loop the car.
+        if(this.isLooping){
+        currentDist = 0;
+        prevDist = 0;
+        this.currentSegment = this.startSegment;
+        this.currentLane = this.startLane;
+        this.setDirection(this.getCarDirection(map.getRoadOrientation(startRoad, currentLane), currentLane));
+        this.setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+        return;
+        }
+        //If the car is not supposed to loop
+        else{
+            return;
+        }
+        /*
+        //Update 3/9: The below method fails when the default car has not followed a straight path towards the end.
         //Call this method when a car reaches the end of the road and its isLooping flag is set to true
         //@Huzefa : Remember to use this method to loop cars
         if (this.isLooping){
@@ -727,18 +757,7 @@ public class Car {
                     current = current.getEastSegment();
                 }
                 this.setCurrentSegment(current);
-            }
-            //Now rest everything, except speed, let it move with currentspeed
-            //Not sure how to handle the coordinates.
-            //@Aniket, I am not calculating how the coordinates will handle, I dont want to break your code
-            currentDist = 0;
-            prevDist = 0;
-            //Handle coordinates here
-        }
-        //If the car is not supposed to loop
-        else{
-            return;
-        }
+            }*/
     }
 }
 

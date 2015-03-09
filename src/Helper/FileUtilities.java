@@ -121,7 +121,6 @@ public class FileUtilities {
 			try {
 				FileUtils.moveFileToDirectory(src1, dest, true);
 			} catch (IOException e){
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -136,7 +135,6 @@ public class FileUtilities {
 			try {
 				FileUtils.copyFileToDirectory(src1, dest, false);
 			} catch (IOException e){
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
