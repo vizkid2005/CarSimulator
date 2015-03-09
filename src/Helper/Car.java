@@ -276,9 +276,35 @@ public class Car {
     }
 	
 	public boolean accelerate(double rateOfAccl){
-		this.rateOfAccl=rateOfAccl;
-		return(accelerate());     
-		}
+		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*rateOfAccl*Math.pow(TIME, 2.0))); // S=ut+0.5at^2 Equation of Motion
+        //this.prevDist=this.prevDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+        this.prevDist=((this.currSpeed*TIME) + (0.5*rateOfAccl*Math.pow(TIME, 2.0)));
+
+		if(this.currentDist>=RoadSegment.length){                      // End of Segment
+	        	//this.prevDist=0.0;
+				this.currentDist=0.0;
+				this.currentSegment=getNextSegment();
+	        	if(this.currentSegment==null){
+	        		reward=false;
+	        		return reward;
+	        	}
+	        	else{
+	        		//System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+	        	}
+	        }
+        else{
+        	if(this.currentSegment!=null){
+		        calculateNewCoordinates();
+		    }
+
+        }
+		
+        this.currSpeed = this.currSpeed+(rateOfAccl*TIME); //v = u + at (The world is progressing at the speed of 1 second)
+        return reward;
+
+     }
+	
 	public boolean brake(){
 	/*
 	 * Brake : Brake will work opposite to the acceleration i.e. it will reduce speed by using equation of
@@ -318,8 +344,36 @@ public class Car {
     }
 	
 	public boolean brake(double rateOfBreaking){
-		this.rateOfBraking=rateOfBreaking;
-		return(brake());
+		if(this.currSpeed==0){
+			reward=false;
+		}
+		else{
+	        this.currentDist = this.currentDist+((this.currSpeed*TIME) - (0.5*rateOfBreaking*Math.pow(TIME, 2.0))); // s = ut - 1/2 at^2
+	        //this.prevDist=this.prevDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	        this.prevDist=((this.currSpeed*TIME) - (0.5*rateOfBreaking*Math.pow(TIME, 2.0)));
+	        if(this.currentDist>=RoadSegment.length){                      // End of Segment
+	        	this.currentDist=0.0;
+	        	this.currentSegment=getNextSegment();
+	        	if(this.currentSegment==null){
+	        		reward=false;
+	        		return reward;
+	        	}
+	        	else{
+	        		//System.out.println("\n ##### New Segment is : ####\n"+this.currentSegment.getPointInGrid().getX()+","+this.currentSegment.getPointInGrid().getY());
+	        		setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
+	        	}
+	        }
+	        else{
+		    	if(this.currentSegment!=null){
+			        calculateNewCoordinates();
+			    }
+	        }
+	        this.currSpeed = this.currSpeed-(rateOfBreaking*TIME); //v = u - at
+	        if(!isSpeedGreaterthanZero()){
+	        	this.currSpeed=0.0;
+	        }
+		}
+        return reward;
 	}
 	public boolean doNothing(){
 		this.currentDist = this.currentDist+((this.currSpeed*TIME) + (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));  // S=ut+0.5at^2 Equation of Motion
