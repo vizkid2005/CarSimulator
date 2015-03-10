@@ -1,0 +1,700 @@
+"C:\Program Files\Java\jdk1.7.0_75\bin\java" -Didea.launcher.port=7532 "-Didea.launcher.bin.path=C:\Program Files (x86)\JetBrains\IntelliJ IDEA Community Edition 14.0.3\bin" -Dfile.encoding=UTF-8 -classpath "D:\College - Spring 2015\Independent Study\CarSimulator\bin;C:\Program Files\Java\jdk1.7.0_75\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\jce.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\jfxrt.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\resources.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\rt.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.7.0_75\jre\lib\ext\zipfs.jar;D:\College - Spring 2015\Independent Study\CarSimulator\lib\commons-io-2.4.jar;C:\Program Files (x86)\JetBrains\IntelliJ IDEA Community Edition 14.0.3\lib\idea_rt.jar" com.intellij.rt.execution.application.AppMain MainPackage.CarSimulator
+
+RoadMap 4-order Traversal :
+X: 2 Y: 0
+X: 2 Y: 1
+X: 2 Y: 2
+X: 2 Y: 3
+X: 1 Y: 3
+X: 0 Y: 3
+X: 2 Y: 4
+X: 3 Y: 3
+X: 4 Y: 3
+***************** Initial Status *****************
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.1
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 0.0
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.1
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 5.0
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+***************** Initial Status Ends *****************
+At time : 1
+You decided to take Action : doNothing
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.1
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 0.125
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.15000000000000002
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 4.875
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 2
+You decided to take Action : accelerate
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.15000000000000002
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 0.25
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.2
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 4.7
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 3
+You decided to take Action : doNothing
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.15000000000000002
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 0.42500000000000004
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.25
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 4.4750000000000005
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 4
+You decided to take Action : doNothing
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.15000000000000002
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 0.6000000000000001
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.3
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 4.2
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 5
+You decided to take Action : doNothing
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.15000000000000002
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 0.7750000000000001
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.35
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 4.0
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 6
+You decided to take Action : accelerate
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.2
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 0.9500000000000002
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.39999999999999997
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 3.625
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 7
+You decided to take Action : accelerate
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.25
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 1.0
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.44999999999999996
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 3.2
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 8
+You decided to take Action : accelerate
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.3
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 1.275
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.49999999999999994
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 3.0
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 9
+You decided to take Action : doNothing
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.3
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 1.5999999999999999
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.5499999999999999
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.475
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 10
+You decided to take Action : doNothing
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.3
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 1.9249999999999998
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.6
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.0
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 11
+You decided to take Action : doNothing
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.3
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 2.0
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.65
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 1.375
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 12
+You decided to take Action : accelerate
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.35
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 2.325
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.7000000000000001
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 1.0
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 13
+You decided to take Action : doNothing
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.35
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.8335
+YCoordinate : 2.7
+Direction : east
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.7500000000000001
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 0.2749999999999999
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 14
+You decided to take Action : doNothing
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.35
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 3.0
+YCoordinate : 3.0
+Direction : south
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.8000000000000002
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 5.0
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 15
+You decided to take Action : accelerate
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.39999999999999997
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 3.375
+YCoordinate : 3.0
+Direction : south
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.8500000000000002
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 4.175
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 16
+You decided to take Action : accelerate
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.44999999999999996
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 3.8
+YCoordinate : 3.0
+Direction : south
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.9000000000000002
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 4.0
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 17
+You decided to take Action : doNothing
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.44999999999999996
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 4.0
+YCoordinate : 3.0
+Direction : south
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 0.9500000000000003
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 3.0749999999999997
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 18
+You decided to take Action : accelerate
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.49999999999999994
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 4.475
+YCoordinate : 3.0
+Direction : south
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 1.0000000000000002
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 3.0
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 19
+You decided to take Action : accelerate
+***************** Car Status *******************
+CarID : 0
+Type : THEIF
+Is Controlled : true
+Color : RED
+CurrSpeed : 0.5499999999999999
+MaxSpeed : 0.5
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 5.0
+YCoordinate : 3.0
+Direction : south
+CurrentLane : 1
+***************** Car Status Ends *******************
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 1.0500000000000003
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 2.0
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 20
+You decided to take Action : accelerate
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 1.1000000000000003
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 1.0
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 21
+You decided to take Action : accelerate
+ *****************************Applying Default Policy ****************************
+***************** Car Status *******************
+CarID : 1
+Type : COP
+Is Controlled : false
+Color : BLUE
+CurrSpeed : 1.1500000000000004
+MaxSpeed : 0.4
+RateOfAccl : 0.05
+RateOfBraking : 0.05
+XCoordinate : 5.0
+YCoordinate : 3.6668
+Direction : north
+CurrentLane : 5
+***************** Car Status Ends *******************
+ ***************************** Ending Default Policy ****************************
+At time : 22
+You decided to take Action : doNothing
+Exception in thread "main" java.lang.NullPointerException
+	at Helper.Car.getNextSegment(Car.java:773)
+	at Helper.Car.doNothing(Car.java:428)
+	at MainPackage.Scenario.takeAction(Scenario.java:86)
+	at MainPackage.CarSimulator.main(CarSimulator.java:45)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:134)
+
+Process finished with exit code 1
