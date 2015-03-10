@@ -38,6 +38,7 @@ public class RoadMap {
         //printIntersectionPoints(roads); //Debug method to check if all roads have appropriate intersection points
         buildRoadMap(roadList); //The core method where all the magic happens
         System.out.println();
+        System.out.println("RoadMap 4-order Traversal : ");
         recursivePrint(RoadStartPointers.get(0),2,allvisited); //Inorder printing of the roads
     }
     public RoadMap(ArrayList<Road> roads){
@@ -280,7 +281,6 @@ public class RoadMap {
         }
         allvisited.add(startPoint);
         AllRoadSegmentPointers.add(startPoint);
-        System.out.println("RoadMap 4-order Traversal : ");
         System.out.println("X: " + startPoint.getPointInGrid().getX() + " Y: " + startPoint.getPointInGrid().getY());
         if (direction == 1) {
             recursivePrint(startPoint.getNorthSegment(), 1, allvisited);

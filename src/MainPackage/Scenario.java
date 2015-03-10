@@ -36,17 +36,6 @@ public class Scenario {
         //Throw a Status object
         Status s = new Status();
     }
-
-    /*
-     * initializeScenario() - This will initialize the scenario.Following task will be performed.
-     * 						  1.Set PredicateFile path,LogFile Path
-     * 						  2.Get Road details,Car details from input file
-     * 						  3.Build RoadMap
-     * 						  4.Initialize the Cars
-     *
-     * */
-
-
     public void setPredicatefile(String predicatefile){
     	this.predicatefile=predicatefile;
     }
@@ -54,15 +43,17 @@ public class Scenario {
         this.logfile = logFile;
     }
     public void initializeScenario(RoadMap map, ArrayList<Car> carList, String predicateFileName, String logFileName){
-        time=1;                             // Initializing the time for Episode
+        time=0;                             // Initializing the time for Episode
         id = (int) Math.round(Math.random()*100000); //5 digit random number
         this.map = map;
         this.carList = carList;
         this.predicatefile = predicateFileName;
         this.logfile = logFileName;
+        System.out.println("***************** Initial Status *****************");
         for(int i = 0;i<carList.size();i++){
             carList.get(i).getCarStatus();
         }
+        System.out.println("***************** Initial Status Ends *****************");
     }
     
     public boolean takeAction(String action,int carNumber){
@@ -70,9 +61,9 @@ public class Scenario {
         * This method will take action and car number as input.It will execute that action and will
         * return TRUE or FALSE depending upon its success and failure.
         * */
-
-    	System.out.println("You decided to take Action : "+action);
 		time++;
+        System.out.println("At time : "+ time);
+    	System.out.println("You decided to take Action : "+action);
 		if(action.equals("accelerate") && carList.contains(carList.get(carNumber))){
 			this.action="accelerate";
 			if(continueScenario(carList.get(carNumber).accelerate())){
@@ -121,6 +112,7 @@ public class Scenario {
 		else{
             reward=false;
         }
+        //carList.get(carNumber).getCarStatus(); Unnecessary Call //TODO - I think this was causing problems, Not sure
 		/*************** Applying Default Policy *****************/
 		defaultPolicy();
 		/********************************************************/
@@ -128,22 +120,16 @@ public class Scenario {
 		return reward;
     }
     public void defaultPolicy(){
+        System.out.println(" *****************************Applying Default Policy ****************************");
         Iterator<Car> carIter = carList.iterator();
         while(carIter.hasNext()){
             Car temp = carIter.next();
             if(!temp.isControlled()){
-                double random = Math.random();
-                if(random < 0.33){
-                    this.takeAction("accelerate",temp.getCarId());
-                }
-                else if(random < 0.66){
-                    this.takeAction("brake",temp.getCarId());
-                }
-                else{
-                    this.takeAction("doNothing",temp.getCarId());
-                }
+                temp.accelerate();
+                temp.getCarStatus();
             }
         }
+        System.out.println(" ***************************** Ending Default Policy ****************************");
     }
 
     boolean continueScenario(boolean reward){
@@ -151,6 +137,7 @@ public class Scenario {
     	return this.reward&reward;
     }
     boolean endScenario(){
+        System.out.println("User controlled car reached end of road.\nWriting FOL....\nExiting Simulator.");
         predicateLogic();
         System.exit(0);
         return true;
@@ -211,7 +198,7 @@ public class Scenario {
     				}
     			}
     		}
-    	    	FileUtilities.write2File(predList,predicatefile, true);
+        FileUtilities.write2File(predList,predicatefile, true);
 	}
     
     double getDistanceBetween(double x1,double y1,double x2,double y2){

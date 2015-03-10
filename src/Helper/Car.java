@@ -5,7 +5,7 @@ import BigMap.RoadMap;
 //Cleaned
 public class Car {
 	DecimalFormat df = new DecimalFormat("#.00000");
-	double TIME=Double.parseDouble(df.format(1.0/60.0)); // Time set to 1Sec used for laws of motion
+	double TIME=1; // Time set to 1Sec used for laws of motion
 	boolean reward=true;
 
     //Car Properties
@@ -79,6 +79,9 @@ public class Car {
         this.setDirection(this.getCarDirection(map.getRoadOrientation(initialRoad, currentLane), currentLane));
         this.currentSegment = map.getRoadSegmentFromRoadName(initialRoad,currentLane);
         this.startSegment = this.currentSegment;
+        this.startLane = this.getCurrentLane();
+        this.map = map;
+        this.startRoad = initialRoad;
         this.nextSegment = this.getNextSegment();
         this.setCarInitialPosition(this.currentSegment,this.currentLane,this.direction);
         this.setCarId((int) carListSize);
@@ -137,7 +140,8 @@ public class Car {
 		double segmentYCoordinate=Segment.getPointInGrid().getY();
 		if(carDirection.equals("north")){
 			this.yCoordinate=segmentYCoordinate+((laneNumber-1)*0.1667);  // 1/6 =0.1667
-			this.xCoordinate=segmentXCoordinate;
+			//TODO - Notify Aniket about Change
+            this.xCoordinate=segmentXCoordinate+1;
 			return true;
 		}
 		else if(carDirection.equals("south")){
@@ -152,7 +156,8 @@ public class Car {
 		}
 		else if(carDirection.equals("west")){
 			this.xCoordinate=segmentXCoordinate+((6-laneNumber)*0.1667);  // 1/6 =0.1667
-			this.yCoordinate=segmentYCoordinate;
+			//TODO - Notify Aniket of Change
+            this.yCoordinate=segmentYCoordinate+1; //Changed on March 9
 			return true;
 		}
 	return false;
@@ -230,6 +235,7 @@ public class Car {
         return isLooping;
     }
 
+    //TODO - when max velocity reached then modify distance as s = ut and not ut + 0.5at^2
 	public boolean accelerate(){
 
         /*
@@ -326,12 +332,12 @@ public class Car {
 	 *         Motion.It will reduce speed , however,it will not reduce speed to zero.So as per equation
 	 *         of Motion car will cover some distance.
 	 * */
-        if(this.currSpeed==0){
+        if(this.currSpeed<=0.0){
 			reward=false;
 		}
 		else{
 	        this.currentDist = this.currentDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0))); // s = ut - 1/2 at^2
-	        //this.prevDist=this.prevDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
+	        //this.prevDist=this.prevDist+((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0))); //TODO - @Aniket: Are you sure you don't want to use this ?
 	        this.prevDist=((this.currSpeed*TIME) - (0.5*this.rateOfAccl*Math.pow(TIME, 2.0)));
 	        if(this.currentDist>=RoadSegment.length){                      // End of Segment
 	        	this.currentDist=0.0;
@@ -816,7 +822,6 @@ public class Car {
 	    	xCoordinate=xCoordinate - this.prevDist;
 	    }
     }
-
     /*************** Validation Procedure *************************/
 	boolean isSpeedGreaterthanZero(){
 		if(this.currSpeed<0){
@@ -826,23 +831,21 @@ public class Car {
 	}
 	public void getCarStatus(){
 		System.out.println("***************** Car Status *******************");
-		//System.out.println("MakeDate : "+makeDate);
 		System.out.println("CarID : "+carId);
+		System.out.println("Type : "+type);
 		System.out.println("Is Controlled : "+isControlled);
-		System.out.println("color : "+color) ;
-		System.out.println("currSpeed : "+currSpeed) ;
-		System.out.println("currentDist : "+currentDist);
-		System.out.println("prevDist : "+prevDist);
-		//System.out.println("maxSpeed : "+maxSpeed) ;
-	    //System.out.println("rateOfAccl : "+rateOfAccl) ;
-		//System.out.println("rateOfBreakking : "+rateOfBraking) ;
-		System.out.println("setXCoordinate : "+xCoordinate) ;
-		System.out.println("setYCoordinate : "+yCoordinate) ;
-		//System.out.println("type : "+type) ;  
-		System.out.println("direction : "+direction) ; 
-		System.out.println("currentLane : "+currentLane) ; 
-		//System.out.println("currentAction : "+currentAction);
-		//isControlled=true;
+		System.out.println("Color : "+color) ;
+		System.out.println("CurrSpeed : "+currSpeed) ;
+		//System.out.println("currentDist : "+currentDist);
+		//System.out.println("prevDist : "+prevDist);
+		System.out.println("MaxSpeed : "+maxSpeed) ;
+	    System.out.println("RateOfAccl : "+rateOfAccl) ;
+		System.out.println("RateOfBraking : "+rateOfBraking) ;
+		System.out.println("XCoordinate : "+xCoordinate) ;
+		System.out.println("YCoordinate : "+yCoordinate) ;
+		System.out.println("Direction : "+direction) ;
+		System.out.println("CurrentLane : "+currentLane) ;
+        System.out.println("***************** Car Status Ends *******************");
 	}
     public void resetPosition(){
         //Update : This should loop the car.

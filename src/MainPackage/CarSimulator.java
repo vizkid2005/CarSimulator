@@ -23,7 +23,7 @@ public class CarSimulator {
     static ArrayList<Car> carList;
     static Scenario s;
 	public static void main(String[] args)throws Exception{
-		String roadFile = new String("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\Roads.csv");
+		String roadFile = new String("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\RoadsSimple.csv");
         String carFile = new String("D:\\College - Spring 2015\\Independent Study\\CarSimulator\\src\\InitialFiles\\Cars.csv");
         map = new RoadMap(roadFile);
         ReadCarInput rci = new ReadCarInput();
@@ -36,26 +36,22 @@ public class CarSimulator {
 
         //Here is a demo policy that randomly takes any one of the actions accelerate,brake or doNothing.
         //Replace the code below with your learner.
-        for(int i= 0;i<20;i++){
+        for(int i= 0;i<18;i++){
             double random = Math.random();
-            if(random < 0.33){
+            if(random < 0.5){
                 s.takeAction("accelerate",0);
-            }
-            else if(random < 0.66){
-                s.takeAction("brake",0);
             }
             else{
                 s.takeAction("doNothing",0);
             }
-        }
 
-//      for(int i = 0;i<5;i++){
-//            boolean success = s.takeAction("accelerate",1);
-//            if(!success){
-//                System.out.println("Exiting");
-//            }
-//        }
-//        s.startScenario("accelerate","doNothing");
+        }
+          /*for(int i = 0;i<5;i++){
+                boolean success = s.takeAction("accelerate",0);
+                if(!success){
+                    System.out.println("Exiting");
+                }
+            }*/
         s.endScenario();
     }
 

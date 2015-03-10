@@ -2,3 +2,5 @@
 .idea/*
 *.iml
 bin/*
+*.log
+src/Helper/scratch 2
