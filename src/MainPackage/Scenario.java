@@ -74,6 +74,7 @@ public class Scenario {
 			}
 		}
 		else if(action.equals("brake")  && carList.contains(carList.get(carNumber))){
+			this.action="brake";
             if(continueScenario(carList.get(carNumber).brake())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -83,6 +84,7 @@ public class Scenario {
             }
         }
 		else if(action.equals("doNothing")  && carList.contains(carList.get(carNumber))){
+			this.action="doNothing";
             if(continueScenario(carList.get(carNumber).doNothing())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -92,6 +94,7 @@ public class Scenario {
             }
         }
 		else if(action.equals("moveRightLane") && carList.contains(carList.get(carNumber))){
+			this.action="moveRightLane";
             if(continueScenario(carList.get(carNumber).moveRightLane())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -101,6 +104,7 @@ public class Scenario {
             }
         }
 		else if(action.equals("moveLeftLane") && carList.contains(carList.get(carNumber))){
+			this.action="moveLeftLane";
             if(continueScenario(carList.get(carNumber).moveLeftLane())){
                 reward = true;
                 carList.get(carNumber).getCarStatus();
@@ -175,13 +179,13 @@ public class Scenario {
     					   (car.getDirection()=="west"&&car.getCarCoordinates().getY()>anotherCar.getCarCoordinates().getY())||
     					   (car.getDirection()=="north"&&car.getCarCoordinates().getX()>anotherCar.getCarCoordinates().getX())||
     					   (car.getDirection()=="south"&&car.getCarCoordinates().getX()<anotherCar.getCarCoordinates().getX())){
-    							predList+="IN_FRONT("+this.id+","+anotherCar.getCarId()+","+this.time+")\n";
+    							predList+="IN_FRONT("+this.id+","+car.getCarId()+","+anotherCar.getCarId()+","+this.time+")\n";
     						}
     						else{
-    							predList+="IN_BACK("+this.id+","+anotherCar.getCarId()+","+this.time+")\n";
+    							predList+="IN_BACK("+this.id+","+car.getCarId()+","+anotherCar.getCarId()+","+this.time+")\n";
     						}
     						 
-    					predList+="DIST_FROM("+this.id+","+getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
+    					predList+="DIST_FROM("+this.id+","+car.getCarId()+","+anotherCar.getCarId()+","+getDistanceBetween(car.getCarCoordinates().getX(),car.getCarCoordinates().getY(),
 							    	anotherCar.getCarCoordinates().getX(),anotherCar.getCarCoordinates().getX())+","+this.time+")\n";
     					}
     				else if(car!=anotherCar&&car.getDirection()==anotherCar.getDirection()){
@@ -189,10 +193,10 @@ public class Scenario {
     					   (car.getDirection()=="west"&&(car.getCurrentLane()-anotherCar.getCurrentLane())<0)||
     					   (car.getDirection()=="south"&&(car.getCurrentLane()-anotherCar.getCurrentLane())>0)||
     					   (car.getDirection()=="north"&&(car.getCurrentLane()-anotherCar.getCurrentLane())<0)){
-    							predList+="IN_RIGHT("+this.id+","+anotherCar.getCarId()+","+this.time+")\n";
+    							predList+="IN_RIGHT("+this.id+","+car.getCarId()+","+anotherCar.getCarId()+","+this.time+")\n";
     					  }
     						else{
-    							predList+="IN_LEFT("+this.id+","+anotherCar.getCarId()+","+this.time+")\n";
+    							predList+="IN_LEFT("+this.id+","+car.getCarId()+","+anotherCar.getCarId()+","+this.time+")\n";
     						}
     					}
     				}
